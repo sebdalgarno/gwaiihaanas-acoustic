@@ -1,11 +1,4 @@
-library(plyr)
-library(sp)
-library(ggplot2)
-library(rgdal)
-library(magrittr)
-library(dplyr)
-library(lubridate)
-library(reshape2)
+source('header.R')
 
 # phase 2 - use siteIDs with data in 2012 & 2013 & 2014 & 2015
 # NBR20_ALDE, 

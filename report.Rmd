@@ -1,5 +1,11 @@
 ---
 title: "Short-term impacts of island restoration on seabirds in Gwaii Haanas (Feb. 07 update)"
+knit: (function(inputFile, encoding) { 
+      out_dir <- 'reports';
+      ext <- '.html';
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_file=file.path(dirname(inputFile), out_dir,  paste('GH-acoustic-Report-', lubridate::date(Sys.time()), ext, sep = ''))) })
 output:
   html_document:
     fig_caption: true
@@ -13,6 +19,7 @@ knitr::opts_chunk$set(echo=F, warning=F,message=F,results="hide", prompt=F, erro
 ```{r}
 source('cleaning.R')
 source('vocalisations.R')
+source('tasks.R')
 ```
 
 ```{r functions, include=FALSE}
@@ -33,7 +40,7 @@ fig <- local({
 ```
 
 ## Spatial and temporal coverage
-Task 2a) Describe seabird and songbird data coverage in space and time with appropriate plots
+Task 2a) `r task2a`
 ```{r spatnorth.cov, fig_height = 5, fig.cap = fig$cap("spatnorth.cov", "Location of ARUs and island groups within northern part of study area.")}
 source('spatial.R')
 mapnorth
@@ -49,7 +56,7 @@ temp.cov
 ```
 
 # Vocalization rates
-Task 2c) Describe the annual and nightly variation in seabird vocalization (proportion of recordings with presence, and proportion of recordings with presence of multiple individuals), by species (appropriate figures such as box plots).
+Task 2c) `r task2c`
 
 ## Methods
 Acoustic Recording Units (ARUs) were located at sites to target breeding habitat of certain species. Some sites had no or very few detections of certain species. For visulaization of nightly and seasonal vocalization rates for each species, we excluded from analyses any sites deemed to have a low amount of vocalization activity, which was defined as less than 50 detections. This approach was taken rather than relying on a priori understanding of habitat. For Ancient Murrelets, Cassin's Auklets, Fork-Tailed Storm-Petrels, and Leach's Storm-Petrels: `r ddply(sitedet, .(species), summarise, length = length(species))$length[1]`, `r ddply(sitedet, .(species), summarise, length = length(species))$length[2]`, `r ddply(sitedet, .(species), summarise, length = length(species))$length[3]` and `r ddply(sitedet, .(species), summarise, length = length(species))$length[4]` sites had 50 or more detections, respectively. For visualization of nightly vocalization rates, we calculated: (1) proportion of recordings with detection of at least one individual in each 10-minute recording period; and (2) proportion of recordings with detection of at least two individuals in each recording period. Proportions were calculated separately for each site. For visualization of seasonal vocalization rates, we calculated: (1) proportion of recordings with detection of one or more individuals in each week-long period; and (2) proportion of recordings with detection of two or more individuals in each week-long period. Proportions were calculated separately for each site. Separate plots were provided for all years combined, and for each year individually to assess whether seasonal vocalization rates shifted between years.

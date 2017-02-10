@@ -1,14 +1,4 @@
-library(plyr)
-library(sp)
-library(ggplot2)
-library(rgdal)
-library(magrittr)
-library(dplyr)
-library(lubridate)
-library(reshape2)
-library(readr)
-library(rgeos)
-library(HGfetch)
+source('header.R')
 
 ### read in data
 seabird=read_csv('data/seabird-raw.csv')

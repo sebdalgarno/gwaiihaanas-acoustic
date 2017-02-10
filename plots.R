@@ -1,11 +1,4 @@
-library(lubridate)
-library(ggthemes)
-library(scales)
-library(ggplot2)
-library(magrittr)
-library(plyr)
-library(dplyr)
-library(plotrix)
+source('header.R')
 
 #  Overall temporal coverage by siteID
 sea %<>% arrange(exp)

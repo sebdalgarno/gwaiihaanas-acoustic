@@ -1,10 +1,4 @@
-library(sp)
-library(rgdal)
-library(ggplot2)
-library(magrittr)
-library(dplyr)
-library(rgeos)
-library(ggrepel)
+source('header.R')
 
 # load shapefile
 islands <- readOGR(dsn = 'data', layer = 'islands')

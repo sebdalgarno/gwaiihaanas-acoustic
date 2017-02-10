@@ -1,20 +1,13 @@
-library(plyr)
-library(sp)
-library(rgdal)
-library(ggplot2)
+source('header.R')
 
-setwd('~/Google_Drive/')
+task2a <- 'Describe seabird and songbird data coverage in space and time with appropriate plots.'
 
-### read data
-seabird=read.csv('Contracts/GH_accoustic_bird/data/Seabirds_010317.csv')
-songbird=read.csv('Contracts/GH_accoustic_bird/data/SongBirds_22Dec2016.csv')
+task2b <- 'If possible (not mandatory), describe the seasonal variation in songbird vocalization rates, overall, and by selected species (SEASON = Early, Mid, Late). This is meant to be an exploratory analyses, not a polished result.'
 
-### task 2a - Describe the annual and nightly variation in seabird vocalization rates, by species (appropriate figures such as box plots)
-plot()
-### task 2b - Describe the annual variation in songbird vocalization rates, overall, and by selected species (appropriate figures such as box plots; up to 10 species)
+task2c <- 'Describe the annual and nightly variation in seabird vocalization (proportion of recordings with presence, and proportion of recordings with presence of multiple individuals), by species (appropriate figures such as box plots).'
 
-### task 2c - Describe differences in species richness by season, for songbirds (using a stacked bar plot or some other similar formatted graph to visualize shifts in the species composition comprising richness)
+task2d <- 'Examine effects of year, rat status, island on seabird vocalization metrics as agreed upon, and departure time.'
 
-### task 2d - Test whether restoration resulted in a short-term increase in seabird vocalizations, by species (abundance), using BACI design
+task2e <- 'Test whether restoration resulted in an increase in seabird vocalization metrics, by species (abundance), using BACI design.'
 
-### task 2e - Test whether restoration resulted in a short-term decrease or increase in songbird vocalizations (abundance), species richness and biodiversity, using BACI design
+task2f <- 'Test whether restoration resulted in a lengthened seabird departure time from rat-infested islands.'

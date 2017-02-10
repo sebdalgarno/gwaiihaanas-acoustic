@@ -1,13 +1,4 @@
-library(plyr)
-library(sp)
-library(ggplot2)
-library(rgdal)
-library(magrittr)
-library(dplyr)
-library(lubridate)
-library(reshape2)
-library(HGfetch)
-library(Hmisc)
+source('header.R')
 
 # make new datetime category for hour:minute
 load(file = 'data/sea-clean.Rda')
