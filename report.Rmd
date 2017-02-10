@@ -1,0 +1,183 @@
+---
+title: "Short-term impacts of island restoration on seabirds in Gwaii Haanas (Feb. 07 update)"
+output:
+  html_document:
+    fig_caption: true
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=F, warning=F,message=F,results="hide", prompt=F, error=F)
+```
+
+```{r}
+source('cleaning.R')
+source('vocalisations.R')
+```
+
+```{r functions, include=FALSE}
+# A function for captioning and referencing images
+fig <- local({
+    i <- 0
+    ref <- list()
+    list(
+        cap=function(refName, text) {
+            i <<- i + 1
+            ref[[refName]] <<- i
+            paste("Figure ", i, ": ", text, sep="")
+        },
+        ref=function(refName) {
+            ref[[refName]]
+        })
+})
+```
+
+## Spatial and temporal coverage
+Task 2a) Describe seabird and songbird data coverage in space and time with appropriate plots
+```{r spatnorth.cov, fig_height = 5, fig.cap = fig$cap("spatnorth.cov", "Location of ARUs and island groups within northern part of study area.")}
+source('spatial.R')
+mapnorth
+```
+
+```{r spatsouth.cov, fig_height = 4, fig.cap = fig$cap("spatsouth.cov", "Location of ARUs and island groups within southern part of study area.")}
+mapsouth
+```
+
+```{r temp.cov, fig_height = 4, fig.cap = fig$cap("temp.cov", "Temporal coverage by ARUs at sites, 2010-2015. Color indicates island. Note that Bischofs, Arichika, Faraday and Murchison were impact islands.")}
+source('plots.R')
+temp.cov
+```
+
+# Vocalization rates
+Task 2c) Describe the annual and nightly variation in seabird vocalization (proportion of recordings with presence, and proportion of recordings with presence of multiple individuals), by species (appropriate figures such as box plots).
+
+## Methods
+Acoustic Recording Units (ARUs) were located at sites to target breeding habitat of certain species. Some sites had no or very few detections of certain species. For visulaization of nightly and seasonal vocalization rates for each species, we excluded from analyses any sites deemed to have a low amount of vocalization activity, which was defined as less than 50 detections. This approach was taken rather than relying on a priori understanding of habitat. For Ancient Murrelets, Cassin's Auklets, Fork-Tailed Storm-Petrels, and Leach's Storm-Petrels: `r ddply(sitedet, .(species), summarise, length = length(species))$length[1]`, `r ddply(sitedet, .(species), summarise, length = length(species))$length[2]`, `r ddply(sitedet, .(species), summarise, length = length(species))$length[3]` and `r ddply(sitedet, .(species), summarise, length = length(species))$length[4]` sites had 50 or more detections, respectively. For visualization of nightly vocalization rates, we calculated: (1) proportion of recordings with detection of at least one individual in each 10-minute recording period; and (2) proportion of recordings with detection of at least two individuals in each recording period. Proportions were calculated separately for each site. For visualization of seasonal vocalization rates, we calculated: (1) proportion of recordings with detection of one or more individuals in each week-long period; and (2) proportion of recordings with detection of two or more individuals in each week-long period. Proportions were calculated separately for each site. Separate plots were provided for all years combined, and for each year individually to assess whether seasonal vocalization rates shifted between years.
+
+## Results
+
+### Nightly Vocalization Rates
+```{r voc.night, fig.cap = fig$cap("voc.night", "Nightly vocalization rates by species. Each boxplot summarizes proportion of recordings with detection of one or more individuals.")}
+voc.night.prop1
+```
+
+```{r voc.night.prop2, fig.cap = fig$cap("voc.night.prop2", "Nightly vocalization rates by species. Each boxplot summarizes proportion of recordings with detection of two or more individuals.")}
+voc.night.prop2
+```
+
+```{r, voc.night.cov.site, fig.height = 2,  fig.cap = fig$cap("voc.night.cov.site", "Number of sites in each 10-minute recording period.")}
+voc.night.cov.site
+```
+
+```{r, voc.night.cov.rec, fig.height = 2, fig.cap = fig$cap("voc.night.cov.rec", "Number of recordings in each 10-minute recording period.")}
+voc.night.cov.rec
+
+```
+
+### Annual vocalization rates, all years combined
+```{r, voc.allyear.prop1, fig.cap = fig$cap("voc.allyear.prop1", "Annual vocalization rates by species, all years combined. Each boxplot summarizes proportion of recordings with detection of one or more individuals at each site.")}
+voc.allyear.prop1
+```
+
+```{r, voc.allyear.prop2, fig.cap = fig$cap("voc.allyear.prop2", "Annual vocalization rates by species, all years combined. Each boxplot summarizes proportion of recordings with detection of two or more individuals at each site.")}
+voc.allyear.prop2
+```
+
+```{r, voc.allyear.cov.site, fig.height = 2,  fig.cap = fig$cap("voc.allyear.cov.site", "Number of sites in each week.")}
+voc.allyear.cov.site
+```
+
+```{r, voc.allyear.cov.rec, fig.height = 2,  fig.cap = fig$cap("voc.allyear.cov.rec", "Number of recordings in each week.")}
+voc.allyear.cov.rec
+```
+
+### Annual vocalization rates by year
+#### Ancient Murrelet
+```{r, voc.byyear.anmu, fig.cap = fig$cap("voc.byyear.anmu", "Annual vocalization rates of Ancient Murrelet, 2010-2015. Boxplots summarize proportion of recordings with detection of one or more individuals.")}
+voc.byyear.anmu
+```
+
+```{r, voc.byyear.anmu.prop2, fig.cap = fig$cap("voc.byyear.anmu.prop2", "Annual vocalization rates of Ancient Murrelet, 2010-2015. Boxplots summarize proportion of recordings with detection of two or more individuals.")}
+voc.byyear.anmu.prop2
+```
+
+```{r, voc.byyear.cov.anmusite, fig.height = 3.5, fig.cap = fig$cap("voc.byyear.cov.anmusite", "Ancient Murrelet annual vocalization rates. Number of sites in each week.")}
+voc.byyear.cov.anmusite
+```
+
+```{r, voc.byyear.cov.anmurec, fig.height = 3.5, fig.cap = fig$cap("voc.byyear.cov.anmurec", "Ancient Murrelet annual vocalization rates. Number of recordings in each week.")}
+voc.byyear.cov.anmurec
+```
+#
+#### Cassin's Auklet
+```{r, voc.byyear.caau, fig.cap = fig$cap("voc.byyear.caau", "Annual vocalization rates of Cassin's Auklet, 2010-2015. Boxplots summarize proportion of recordings with detection of one or more individuals.")}
+voc.byyear.caau
+```
+
+```{r, voc.byyear.caau.prop2, fig.cap = fig$cap("voc.byyear.caau.prop2", "Annual vocalization rates of Cassin's Auklet, 2010-2015. Boxplots summarize proportion of recordings with detection of two or more individuals.")}
+voc.byyear.caau.prop2
+```
+
+```{r, voc.byyear.cov.caausite, fig.height = 3.5, fig.cap = fig$cap("voc.byyear.cov.caausite", "Cassin's Auklet annual vocalization rates. Number of sites in each week.")}
+voc.byyear.cov.caausite
+```
+
+```{r, voc.byyear.cov.caaurec, fig.height = 3.5, fig.cap = fig$cap("voc.byyear.cov.caaurec", "Cassin's Auklet annual vocalization rates.Number of recordings in each week.")}
+voc.byyear.cov.caaurec
+```
+
+#### Fork-Tailed Storm-Petrel
+```{r, voc.byyear.ftsp, fig.cap = fig$cap("voc.byyear.ftsp", "Annual vocalization rates of Fork-Tailed Storm-Petrel, 2010-2015. Boxplots summarize proportion of recordings with detection of one or more individuals.")}
+voc.byyear.ftsp
+```
+
+```{r, voc.byyear.ftsp.prop2, fig.cap = fig$cap("voc.byyear.ftsp.prop2", "Annual vocalization rates of Fork-Tailed Storm-Petrel, 2010-2015. Boxplots summarize proportion of recordings with detection of two or more individuals.")}
+voc.byyear.ftsp.prop2
+```
+
+```{r, voc.byyear.cov.ftspsite, fig.height = 3.5, fig.cap = fig$cap("voc.byyear.cov.ftspsite", "Annual vocalization rates of Fork-tailed Storm-Petrel. Number of sites in each week.")}
+voc.byyear.cov.ftspsite
+```
+
+```{r, voc.byyear.cov.ftsprec, fig.height = 3.5, fig.cap = fig$cap("voc.byyear.cov.ftsprec", "Annual vocalization rates of Fork-tailed Storm-Petrel. Number of recordings in each week.")}
+voc.byyear.cov.ftsprec
+```
+
+#### Leach's Storm-Petrel
+```{r, voc.byyear.lesp, fig.cap = fig$cap("voc.byyear.lesp", "Annual vocalization rates of Leach's Storm-Petrel, 2010-2015. Boxplots summarize proportion of recordings with detection of one or more individuals.")}
+voc.byyear.lesp
+```
+
+```{r, voc.byyear.lesp.prop2, fig.cap = fig$cap("voc.byyear.lesp.prop2", "Annual vocalization rates of Leach's Storm-Petrel, 2010-2015. Boxplots summarize proportion of recordings with detection of two or more individuals.")}
+voc.byyear.lesp.prop2
+```
+
+```{r, voc.byyear.cov.lespsite,fig.height = 3.5, fig.height = 3.5, fig.cap = fig$cap("voc.byyear.cov.lespsite", "Annual vocalization rates of Leach's Storm-Petrel. Number of sites in each week.")}
+voc.byyear.cov.lespsite
+```
+
+```{r, voc.byyear.cov.lesprec, fig.height = 3.5, fig.cap = fig$cap("voc.byyear.cov.lesprec", "Annual vocalization rates of Leach's Storm-Petrel. Number of recordings in each week.")}
+voc.byyear.cov.lesprec
+```
+
+<!-- # BACI -->
+
+<!-- We used a before-after-control-impact (BACI) quasi-experimental design to test the impact of rat eradication on seabird populations within the study area. Two phases of rat eradication occured: Phase 1 in 2011 via ground-eradication methods; Phase 2 in 2013 via aerial eradication. In Phase 1, impact sites were Arichika and Bischoffs, with control sites established at Alder, Hotspring and Ramsay. Sampling occurred 2 years prior and 2 years after eradication for impact sites and one year before and 4 years after for control sites (Figure 1). In phase 2, impact sites were Faraday and Murchison islands and control sites included Alder, Hotspring, Ramsay and House islands. Occurence of four seabird species (Ancient Murrelet, Cassin's Auklet, Fork-Tailed Storm-Petrel, Leach's Storm-Petrel) was determined by manual classification of 10-minute recordings from Acoustic Recording Units (ARUs). Each recording was classified as no detection (0), detection of a single individual (1) and detection of more than one individual (2). We recoded these into two binary response variables: (1) presence/absence; (2) presence of more than one individual/absence. -->
+
+<!-- Sampling time varied across sites (both within-season and across-seasons; Figure 1). -->
+<!-- ```{r sea, echo = FALSE, results = 'hide', message = FALSE} -->
+
+<!-- ggplot(subset(sea, phase2 ==1), aes(x=DateTime, y=1)) + -->
+<!--   geom_bar(stat = 'identity', lwd = 0.3, aes(color = exp))  +  -->
+<!--   facet_wrap(~siteID, ncol = 1, strip.position = 'right') + theme_bw() + -->
+<!--   scale_x_datetime(breaks = date_breaks('2 months'), labels = date_format("%b-%Y")) +  -->
+<!--   theme(axis.text.x = element_text(angle = 90, size = 9)) +  -->
+<!--   labs(x = 'Date', y = 'Sites with Operational ARU', color = '') + -->
+<!--   theme(axis.title=element_text(size=12, face = 'bold') , axis.title.x=element_text(margin=margin(20,0,0,0)), -->
+<!--         axis.title.y=element_text(margin=margin(0,15,0,0)), -->
+<!--         strip.text=element_text(size=7.5, face="bold"), legend.title = element_text(size = 10, face = 'bold')) -->
+
+<!-- ``` -->
+<!-- Three impact sites had data two years before and after eradication; 5 impact sites had data one year before and two years after eradication; and one site had data one year before and after eradication. Two control sites had data three years before and two years after eradication; two control sites had data two years before and after eradication (one in 2011 and 2013, the other in 2012 and 2013); one control site had data one year before and two years after eradication. Based on vocalization rates we constrained within-season sampling to a time with minimal permanent ingress or egress of individuals (i.e. period likely to contain full breeding population for that year.) For Ancient Murrelets, this was  -->
+
+
