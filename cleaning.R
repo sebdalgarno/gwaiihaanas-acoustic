@@ -84,6 +84,17 @@ sea %<>% mutate(pa = replace(presence, presence == 2, 1),
                 pa2 = replace(tmp, tmp == 2, 1),
                 tmp = NULL)
 
+sea %<>% mutate(hour.min = paste(hour(DateTime), minute(DateTime), sep=":"),
+                hourmin = parse_date_time(hour.min, 'HM'),
+                hrmin = as.POSIXct(ifelse(hour(hourmin) >= 0 & hour(hourmin) < 06, hourmin + ddays(1), hourmin), 
+                                   origin = "1970-01-01", tz = tz_data),
+                hour.min = NULL,
+                hourmin = NULL,
+                ynight = as.Date(paste(2000, lubridate::yday(night), 1, sep = '-'),' %Y-%j-%H'), # note that year is arbitrary
+                year = year(night),
+                week = as.Date(paste(2000, lubridate::week(night), 5, sep = '-'),' %Y-%U-%u') # note that year is arbitrary
+)
+
 save(sea, file = 'data/sea-clean.Rda')
 # create a spatial points data.frame
 sp.sea <- convert_proj(sea, 'long', 'lat')

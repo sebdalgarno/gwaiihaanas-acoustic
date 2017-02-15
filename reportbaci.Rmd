@@ -1,0 +1,126 @@
+---
+title: "Short-term impacts of island restoration on seabirds in Gwaii Haanas (Feb. 15 update)"
+knit: (function(inputFile, encoding) { 
+      out_dir <- 'reports';
+      ext <- '.html';
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_file=file.path(dirname(inputFile), out_dir,  paste('GH-acoustic-Report-', lubridate::date(Sys.time()), ext, sep = ''))) })
+output:
+  html_document:
+    fig_caption: true
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=F, warning=F,message=F,results="hide", prompt=F, error=F)
+```
+
+```{r functions, include=FALSE}
+# A function for captioning and referencing images
+fig <- local({
+    i <- 0
+    ref <- list()
+    list(
+        cap=function(refName, text) {
+            i <<- i + 1
+            ref[[refName]] <<- i
+            paste("Figure ", i, ": ", text, sep="")
+        },
+        ref=function(refName) {
+            ref[[refName]]
+        })
+})
+```
+
+# BACI
+```{r}
+source('header.R')
+source('baci-plots.R')
+source('baci-prep.R')
+source('baci-models.R')
+```
+Task 2e) `r task2e`
+
+This BACI experimental design included multiple control and impact sites, across multiple years before and after impact (i.e. rat eradication). Island groups ('sites') were compared and ARU locations within island groups ('replicates') were averaged for each site:year combination. Two response variables were considered: (1) the proportion of recordings with detection of at least one individual across a common within-season time-period (p(presence)); (2) the proportion of recordings with detection of more than one individual (i.e. overlapping calls) across a common within-season time-period (p(presence > 1). Separate BACI analyses were carried out for each species (`r sp[1]`, `r sp[2]`, `r sp[3]`), eradication phase (Phase 1, Phase 2) and response (p(presence), p(presence > 1)).
+
+Key assumptions:
+1. System is in equilibirum before and after impact.
+*  This assumption may not be valid as recovery of seabird breeding populations (i.e. colonies) may be more long-term. Thus lack of an effect of eradication between control and impact islands may simply be attributed to short-term nature of the experiment. 
+2. Equality of standard deviation at each site-year combination
+* Plots show equality of standard deviations
+3. observations are indiependent within each site-year combination and across years
+* Sites were spaced sufficeintly far apart that this assumption is valid
+
+### Phase 2
+In phase 2, eradication of rats took place post-breeding season, 2013. There were two impact sites (Faraday, Murchison) and 4 control sites (Alder, Hotspring/House, Ramsay) and in general, 3 years of sampling before impact (2011, 2012, 2013) and 2 years of sampling after impact (2014, 2015). In total, there were 53 replciate:year combinations (after filtering out replicates that sampled outside of our time-window; see below). Replicates were located at fixed locataions across years. The sampling design was unbalanced; the number of replicates at each site ranged from 1 to 8, and replicates did not consistently sample in all years (2011-2015).  
+
+First, we constrained our anlaysis to recordings from May 01 - June 15, for each replicate:year combination. This was a period of substantial temporal overlap in replicate sampling and corresponds to a period of high vocalization activity for all species considered (ANMU, CAAU, FTSP; see previous section), which we assume indicates relative equilibrium in the breeding population (i.e. minimal permanent ingress/egress of breeders). This excluded 3 of 56 replicate:year combinations: NBR_21_ALDE:2014 (03-20: 04-26); NBR26_MURC:2012 (06-18: 08-18); NBR34_FARA:2012 (06-18: 08-17) and reduced the total number of 10-minute recoring samples from 326,012 to 117,168.
+
+We fit a mixed effects model using the lmer() function within the lme4 package. A model was fit with fixed effects period (Before/After), siteclass (Control/Impact), and period:siteclass interaction; random effects included year and island. We used ANOVA (type 3 with Kenward-Roger approximation for degrees of freedom) to determine statistical significance of fixed effects. A p-value < 0.05 for the interacation term indicated presence of a BACI effect. We determined the magnitude of the BACI effect by estimating marginal means and determining 95% Confidence Intervals (CI); CI including 0 indicated no effect.
+
+```{r, tempcov.ph2, fig.height = 5, fig.width = 8, fig.cap = fig$cap("tempcov.ph2", "Temporal coverage of each location with ARU (i.e. 'replicate'). Colour indicates whether replicate is located on a control or impact island. Vertical black lines indiacte sampling window used for analysis.")}
+tempcov.baci(seaph2.pre, 'night', 'siteID', 'exp')
+  
+```
+
+### Ancient Murrelet
+#### Presence of >= 1 individual
+
+##### Mean proportion and standard deviation values for all site:year combinations.
+```{r results = "asis"}
+kable(mutate(mean.anmu, Year = year, year = NULL, yearf = NULL,
+      IslandGroup = island, island = NULL,
+      SiteClass = exp, exp = NULL,
+      Period = period, period = NULL,
+      n = n, 
+      MeanProportion = mean.prop, mean.prop = NULL,
+      SdProportion = sd.prop, sd.prop = NULL
+      ) %>%
+  select(Year, IslandGroup, SiteClass, Period, n, MeanProportion, SdProportion))
+```
+
+##### Test homogeneity of standard deviation across mean
+```{r, sd.anmu.ph2.1, fig.height = 2, fig.width =3, fig.cap = fig$cap("sd.anmu.ph2.1", "Standard Deviation against mean p(presence) at replicates for each site")}
+par(c(mfrow = c(1,2)))
+ggplot(mean.anmu) + geom_point(aes(x = mean.prop, y = sd.prop), size = 2) + theme_bw()
+ggplot(mean.anmu) + geom_point(aes(x = log(mean.prop), y = log(sd.prop)), size = 2) + theme_bw()
+```
+
+##### Plot BACI results
+```{r, mean.anmu.ph2.1, fig.cap = fig$cap("mean.anmu.ph2.1", "Mean proportion of recordings with detection of at least one individual at repicates for each island group. Color indicates whether island was control or impact; shape indicates island group")}
+ggplot(mean.anmu, aes(x = year, y = mean.prop,  color = exp, shape = island)) + geom_point(size = 3) + geom_line() +
+  theme_bw() + geom_vline(xintercept = 2013.5) + labs(x = 'Year', y = 'Mean p(presence)', color = 'Site Class', shape = 'Island Group')
+```
+
+##### Model results
+Model for demonstration (will not be in final report): 
+lmer.anmu.ph2.1 <- lmerTest::lmer(mean.prop ~ period + exp + period:exp + (1|yearf) + (1|island), data = mean.anmu)
+summary(lmer.anmu.ph2.1)
+
+```{r results = "asis"}
+tab1 <- coef(summary(lmer.anmu.ph2.1))
+rownames(tab1) <- c('Intercept', 'Period', 'SiteClass', 'Period:SiteClass')
+kable(tab1)
+```
+
+Marginal means
+```{r results = "asis"}
+tab2 <- summary(lmer.anmu.ph2.1.marg)
+colnames(tab2) <- c('SiteClass', 'Period', 'lsMean', 'SE', 'df', 'Lower CI', "Upper CI")
+kable(tab2)
+```
+# ```{r results = "asis"}
+# contrast(lmer.anmu.ph2.1.marg, list(baci=c(1,-1,-1,1)))
+# ```
+# 
+# ```{r}
+# confint(contrast(lmer.anmu.ph2.1.marg, list(baci=c(1,-1,-1,1))))
+# ```
+# 
+# ```{r results = "asis"}
+# kable(VarCorr(lmer.anmu.ph2.1))
+# ```
+
+No fixed effects within the mixed-effects model were statistically significant (p-values > 0.05; Table 1). The estimated effect of impact is -0.09, i.e. that proprotion of detections with individuals decreased following rat eradication. This is the opposite effect of what was expected. This effect was relatively small and was not statistically significant.
+
