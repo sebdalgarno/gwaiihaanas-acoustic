@@ -1,91 +1,70 @@
 source('header.R')
+source('data-clean.R')
 
   ## create phase 2 time intervals to find max overlap
   load('data/sea-clean.Rda')
-  sea %<>% mutate(hour.min = paste(hour(DateTime), minute(DateTime), sep=":"),
-                  hourmin = parse_date_time(hour.min, 'HM'),
-                  hrmin = as.POSIXct(ifelse(hour(hourmin) >= 0 & hour(hourmin) < 06, hourmin + ddays(1), hourmin), 
-                                     origin = "1970-01-01", tz = tz_data),
-                  hour.min = NULL,
-                  hourmin = NULL,
-                  ynight = as.Date(paste(2000, lubridate::yday(night), 1, sep = '-'),' %Y-%j-%H'), # note that year is arbitrary
-                  year = year(night),
-                  week = as.Date(paste(2000, lubridate::week(night), 5, sep = '-'),' %Y-%U-%u') # note that year is arbitrary
-  )
+  load('data/voc-year-means.Rda')
+  load('data/voc-night-means.Rda')
   
-  seaph2.pre <- filter(sea, phase2 == 1) %>%
-    
-    select(island, siteID, year, night, rats, exp, species, pa, pa2)
+  seabaci <- select(sea, island, siteID, year, hrmin, night, rats, exp, species, pa, pa2, phase1, phase2)
   
-  # find time interval overlap between replicates
-  seaph2.int <- arrange(seaph2.pre, siteID, night) %>%
-    
-    group_by(siteID, year) %>%
-    
-    summarise(start = first(night), 
-              end = last(night))  
+  # set year to arbitrary (2010) to enable filter by within-season data and time
+  seabaci$night.ny <- seabaci$night
+  year(seabaci$night.ny) <- 2010
   
-  # change year to 2010 to allow within-season comparison regardless of year
-  year(seaph2.int$start) <- 2010
-  year(seaph2.int$end) <- 2010
+  # filter by date sampling window for each species
+  anmu.strt <- "2010-05-11"
+  anmu.end <- "2010-05-24"
+  caau.strt <- "2010-05-01"
+  caau.end <- "2010-05-14"
+  ftsp.strt <- "2010-05-01"
+  ftsp.end <- "2010-05-14"
   
-  seaph2.sampint <- interval(seaph2.int$start, seaph2.int$end, tz = tz_data)
+  seabaci %<>% filter(night.ny >= as.Date(anmu.strt) & night.ny <= as.Date(anmu.end) & species == sp[1] |
+                     night.ny >= as.Date(caau.strt) & night.ny <= as.Date(caau.end) & species == sp[2] | ## second peak in vocal activity
+                     night.ny >= as.Date(ftsp.strt) & night.ny <= as.Date(ftsp.end) & species == sp[3]) 
   
-  # create analysis interval to test how many replicate:site combinations intersect
-  seaph2.analint <- interval(ymd(paste(2010, 05, 01, sep = '-'), tz = tz_data), ymd(paste(2010, 06, 01, sep = '-'), tz = tz_data))
   
-  intersect(seaph2.sampint, seaph2.analint)
+  # filter by night samping window for each species
+  seabaci %<>% filter(hour(night) >= 0 & hour(night) <=3  & species == sp[1] |
+                  hour(night) >= 0 & hour(night) <=3  & species == sp[3] |
+                  hour(night) >= 1 & hour(night) <=4  & species == sp[2] 
+                  )
+  # create period variable
+  seabaci %<>% mutate(PeriodPh2 = ifelse(year<= 2013, 'Before', 'After'),
+                      PeriodPh1 = ifelse(year<= 2011, 'Before', 'After'))
   
-  # filter seaph2 df to include only recordings between May01 and June 15
-  seaph2.pre$night.ny <- seaph2.pre$night
-  year(seaph2.pre$night.ny) <- 2010
-  
-  seaph2 <- filter(seaph2.pre, night.ny >= as.Date("2010-05-01") & night.ny <= as.Date("2010-06-15") ) 
-  
-  # filter out Ramsay replicate NBR22_RAMS because only one year of data (2011)
-  seaph2 %<>% filter(siteID != 'NBR22_RAMS')
-  
-  seaph2 %<>% mutate(period = ifelse(year<= 2013, 'Before', 'After'))
-  
-  seaph2 %<>% mutate(island = factor(island),
-                     siteID = factor(siteID),
-                     yearf = ordered(year, levels = c(2011, 2012, 2013, 2014, 2015)),
+  # ensure factors and ordered factors
+  seabaci %<>% mutate(island = factor(island),
+                     site = factor(siteID),
+                     yearf = ordered(year, levels = c(2010, 2011, 2012, 2013, 2014, 2015)),
                      rats = ordered(rats, levels = c('Absent', 'Reduced', 'Present')),
-                     exp = factor(exp),
-                     period = ordered(period, levels = c('Before', 'After')),
+                     exp = ordered(exp, levels = c('Control', 'Impact')),
+                     PeriodPh1 = ordered(PeriodPh1, levels = c('Before', 'After')),
+                     PeriodPh2 = ordered(PeriodPh2, levels = c('Before', 'After')),
                      ynight = floor_date(night, 'day')
   )
   
-  ### anmu baci
-  ph2.baci.anmu <- ddply(filter(seaph2, species == sp[1]), .(island, siteID, year), summarise, yearf = first(yearf), exp = first(exp), period = first(period), 
+  ### summarize proportions by site
+  baci <- ddply(seabaci, .(species, island, site, year, phase1, phase2), summarise, yearf = first(yearf), exp = first(exp), PeriodPh1 = first(PeriodPh1),
+                    PeriodPh2 = first(PeriodPh2),
                          trials = length(siteID), success1 = sum(pa), success2 = sum(pa2)) %>%
     
-    mutate(prop1 = success1/trials,
-           prop2 = success2/trials)
+    mutate('p(presence)' = success1/trials,
+           'p(presence>1)' = success2/trials)
   
-  # summary
-  mean.anmu <- ddply(ph2.baci.anmu, .(year, yearf, island, exp, period), function(x){
+  
+  ### melt prop so same df
+  baci %<>% melt(measure.vars = c('p(presence)', 'p(presence>1)'), variable.name = 'propType', value.name = 'prop' )
+  
+  # empirical logit transform
+  baci %<>% mutate(prop = binomTools::empLogit(prop))
+  
+  ### means by island
+  baci.island <- ddply(baci, .(species, year, yearf, island, exp, propType, PeriodPh1, PeriodPh2, phase1, phase2), function(x){
     n <- nrow(x)
-    mean.prop <- mean(x$prop1, na.rm=TRUE)
-    sd.prop   <- sd(  x$prop1, na.rm=TRUE)
+    mean.prop <- mean(x$prop, na.rm=TRUE)
+    sd.prop   <- sd(  x$prop, na.rm=TRUE)
     res <- data.frame(n, mean.prop, sd.prop)
   })
   
-  # plot sd vs mean - log transformation not needed
-  
-  
-  # caau baci
-  ph2.baci.caau <- ddply(filter(seaph2, species == sp[2]), .(island, siteID, year), summarise, exp = first(exp), period = first(period), 
-                         trials = length(siteID), success1 = sum(pa), success2 = sum(pa2)) %>%
-    
-    mutate(prop1 = success1/trials,
-           prop2 = success2/trials)
-  
-  # ftsp baci
-  ph2.baci.ftsp <- ddply(filter(seaph2, species == sp[3]), .(island, siteID, year), summarise, exp = first(exp), period = first(period), 
-                         trials = length(siteID), success1 = sum(pa), success2 = sum(pa2)) %>%
-    
-    mutate(prop1 = success1/trials,
-           prop2 = success2/trials)
-  
-

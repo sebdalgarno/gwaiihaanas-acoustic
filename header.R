@@ -18,6 +18,10 @@ library(lme4)
 library(lmerTest)
 library(lsmeans)
 library(knitr)
+library(zoo)
+library(lazyeval)
+library(binomTools)
+library(captioner)
 
 ## function to convert projection
 convert_proj <- function(data, data.x = "Long", data.y = "Lat", data.CRS = "+init=epsg:4326", new.CRS = "+init=epsg:3005") {
@@ -29,7 +33,7 @@ convert_proj <- function(data, data.x = "Long", data.y = "Lat", data.CRS = "+ini
   sp::spTransform(data, new.CRS)
 }
 
-tz_data = 'PST8PDT'
+tz_data = 'Etc/GMT+8'
 
 sp = c('Ancient Murrelet', "Cassin's Auklet", "Fork-Tailed Storm-Petrel", "Leach's Storm-Petrel")
 

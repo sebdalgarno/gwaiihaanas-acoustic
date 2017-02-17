@@ -20,10 +20,10 @@ sea %<>% mutate(hour = round(hour.rough, -2)/100,
                 minute = hour.rough - minute.rough)
 
 # true DateTime
-sea %<>% mutate(DateTime = ISOdate(year, month, day, hour, minute, tz = "America/Los_Angeles"))
+sea %<>% mutate(DateTime = ISOdate(year, month, day, hour, minute, tz = tz_data))
 
 # create 'night' DateTime to analyse by night
-sea %<>% mutate(night = ISOdate(year, monthstrt, daystrt, hour, minute, tz = "America/Los_Angeles"))
+sea %<>% mutate(night = ISOdate(year, monthstrt, daystrt, hour, minute, tz = tz_data))
 
 # fix island names (e.g. alder vs. alder islet)
 sea %<>% mutate(island = recode(island, `Alder Islet` = 'Alder'))
@@ -71,12 +71,10 @@ sea$species %<>% recode(anmu = "Ancient Murrelet", caau = "Cassin's Auklet",
 sea %<>% mutate(exp = recode(island, Alder = "Control", Arichika = "Impact", Bischofs = "Impact",
                              Faraday = "Impact", Hotspring = "Control", House = "Control",
                              Murchison = "Impact", Ramsay = "Control"),
-                phase1 = recode(island, Alder = 1, Arichika = 1, Bischofs = 1,
-                                Faraday = 0, Hotspring = 1, House = 0,
-                                Murchison = 0, Ramsay = 0),
-                phase2 = recode(island, Alder = 1, Arichika = 0, Bischofs = 0,
-                                Faraday = 1, Hotspring = 1, House = 1,
-                                Murchison = 1, Ramsay = 1))
+                phase1 = ifelse((island == 'Alder' | island == 'Arichika' | island == 'Bischofs' |
+                                  island == 'Hotspring' | island == 'Ramsay') & year(night) < 2014, 1, 0),
+                phase2 = ifelse((island == 'Alder' | island == 'Faraday' | island == 'Murchison' |
+                                  island == 'Hotspring' | island == 'House' | island == 'Ramsay') & year(night) > 2010, 1, 0))
 
 # create a p/a variables (pa > 1 and pa2 > 2)
 sea %<>% mutate(pa = replace(presence, presence == 2, 1),
@@ -84,9 +82,10 @@ sea %<>% mutate(pa = replace(presence, presence == 2, 1),
                 pa2 = replace(tmp, tmp == 2, 1),
                 tmp = NULL)
 
-sea %<>% mutate(hour.min = paste(hour(DateTime), minute(DateTime), sep=":"),
-                hourmin = parse_date_time(hour.min, 'HM'),
-                hrmin = as.POSIXct(ifelse(hour(hourmin) >= 0 & hour(hourmin) < 06, hourmin + ddays(1), hourmin), 
+# create hour:minute variable for nightly vocalisation probability
+sea %<>% mutate(hour.min = paste(hour(night), lubridate::minute(night), sep=":"),
+                hourmin = parse_date_time(hour.min, 'HM', tz = tz_data),
+                hrmin = as.POSIXct(ifelse(hour(hourmin) >= 0 & hour(hourmin) < 06, hourmin + ddays(1), hourmin), # make 1am follow from 11:pm as next night
                                    origin = "1970-01-01", tz = tz_data),
                 hour.min = NULL,
                 hourmin = NULL,
@@ -94,6 +93,7 @@ sea %<>% mutate(hour.min = paste(hour(DateTime), minute(DateTime), sep=":"),
                 year = year(night),
                 week = as.Date(paste(2000, lubridate::week(night), 5, sep = '-'),' %Y-%U-%u') # note that year is arbitrary
 )
+
 
 save(sea, file = 'data/sea-clean.Rda')
 # create a spatial points data.frame

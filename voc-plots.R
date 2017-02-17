@@ -56,6 +56,16 @@ point <- function (data, x, facet, xlab = 'Date', ylab = 'p(presence)', date.bre
 }  
 point(voc.allyear.m, x = 'ynight', 'species')
 
+# 14-day sampling window
+ggplot(voc.allyear.m, aes(label = paste(month(ynight, label = TRUE), day(ynight), sep = '-'))) + geom_line(aes(x = ynight, y = mean1.14, color = species)) + geom_point(aes(x = ynight, y = day1), color = 'black') + 
+  geom_label(aes(x = ynight, y = day1), hjust = -0.2, vjust = 0.2) + theme_bw() + labs(x = 'Date', y = 'p(presence)', color = 'Species') +
+  scale_x_date(breaks = date_breaks('1 month'), labels = date_format("%b")) 
+
+ggplot(voc.night.m, aes(label = paste(hour(hrmin), lubridate::minute(hrmin), sep = ':'))) + geom_line(aes(x = hrmin, y = mean1.14, color = species)) + geom_point(aes(x = hrmin, y = hour1), color = 'black') + 
+  geom_label(aes(x = hrmin, y = hour1), hjust = -0.2, vjust = 0.2) +  labs(x = 'Time of Night', y = 'p(presence)', color = 'Species') +
+  scale_x_datetime(breaks = date_breaks('2 hours'), labels = date_format("%H:%M", tz = tz_data))  + theme_bw()
+  
+
 voc.night.prop1
 
 voc.night.prop2
