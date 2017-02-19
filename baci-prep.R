@@ -7,27 +7,30 @@ source('header.R')
   
   seabaci <- select(sea, island, siteID, year, hrmin, night, rats, exp, species, pa, pa2, phase1, phase2)
   
+  # night sampling window for each species
+  n.window <- ddply(filter(voc.night.m, response == 'p(presence)', !is.na(max.3)), .(species), summarise, 
+                    time.start =  first(hrmin) - minutes(90), time.end =  first(hrmin) + minutes(90))
+  
+  # seasonal sampling window for each species
+  y.window <- ddply(filter(voc.allyear.m, response == 'p(presence)', !is.na(max.14)), .(species), summarise, 
+                    date.start =  first(ynight) - days(7), date.end =  first(ynight) + days(7))
+  
+  
   # set year to arbitrary (2010) to enable filter by within-season data and time
   seabaci$night.ny <- seabaci$night
   year(seabaci$night.ny) <- 2010
   
   # filter by date sampling window for each species
-  anmu.strt <- "2010-05-11"
-  anmu.end <- "2010-05-24"
-  caau.strt <- "2010-05-01"
-  caau.end <- "2010-05-14"
-  ftsp.strt <- "2010-05-01"
-  ftsp.end <- "2010-05-14"
-  
-  seabaci %<>% filter(night.ny >= as.Date(anmu.strt) & night.ny <= as.Date(anmu.end) & species == sp[1] |
-                     night.ny >= as.Date(caau.strt) & night.ny <= as.Date(caau.end) & species == sp[2] | ## second peak in vocal activity
-                     night.ny >= as.Date(ftsp.strt) & night.ny <= as.Date(ftsp.end) & species == sp[3]) 
+  seabaci %<>% filter(yday(night) >= yday(y.window[1,2]) &  yday(night) <= yday(y.window[1,3]) & species == sp[1] |
+                      yday(night) >= yday(y.window[2,2]) &  yday(night) <= yday(y.window[2,3]) & species == sp[2] | ## second peak in vocal activity
+                      yday(night) >= yday(y.window[3,2]) &  yday(night) <= yday(y.window[3,3]) & species == sp[3])
   
   
   # filter by night samping window for each species
-  seabaci %<>% filter(hour(night) >= 0 & hour(night) <=3  & species == sp[1] |
-                  hour(night) >= 0 & hour(night) <=3  & species == sp[3] |
-                  hour(night) >= 1 & hour(night) <=4  & species == sp[2] )
+  seabaci %<>% filter(hour(night) >= hour(n.window[1,2]) & hour(night) <= hour(n.window[1,3])  & species == sp[1] |
+                      hour(night) >= hour(n.window[2,2]) & hour(night) <= hour(n.window[2,3])  & species == sp[2] |
+                      hour(night) >= hour(n.window[3,2]) & hour(night) <= hour(n.window[3,3])  & species == sp[3]) 
+
   
   # create period variable
   seabaci %<>% mutate(PeriodPh2 = ifelse(year<= 2013, 'Before', 'After'),

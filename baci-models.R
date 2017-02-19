@@ -9,10 +9,10 @@ lmer_fit = function(data, period) {
 }
 
 # fit models
-anmu.ph2.1 <- lmer_fit(data = dplyr::filter(baci, species == sp[1] & phase2 == 1 & propType == 'p(presence)' & island != 'Hotspring'), period = 'PeriodPh2')
-anmu.ph2.2 <- lmer_fit(data = dplyr::filter(baci, species == sp[1] & phase2 == 1 & propType == 'p(presence>1)' & island != 'Hotspring'), period = 'PeriodPh2')
-anmu.ph1.1 <- lmer_fit(data = dplyr::filter(baci, species == sp[1] & phase1 == 1 & propType == 'p(presence)' & island != 'Hotspring'), period = 'PeriodPh1')
-anmu.ph1.2 <- lmer_fit(data = dplyr::filter(baci, species == sp[1] & phase1 == 1 & propType == 'p(presence>1)' & island != 'Hotspring'), period = 'PeriodPh1')
+anmu.ph2.1 <- lmer_fit(data = dplyr::filter(baci, species == sp[1] & phase2 == 1 & propType == 'p(presence)'), period = 'PeriodPh2')
+anmu.ph2.2 <- lmer_fit(data = dplyr::filter(baci, species == sp[1] & phase2 == 1 & propType == 'p(presence>1)'), period = 'PeriodPh2')
+anmu.ph1.1 <- lmer_fit(data = dplyr::filter(baci, species == sp[1] & phase1 == 1 & propType == 'p(presence)'), period = 'PeriodPh1')
+anmu.ph1.2 <- lmer_fit(data = dplyr::filter(baci, species == sp[1] & phase1 == 1 & propType == 'p(presence>1)'), period = 'PeriodPh1')
 
 caau.ph2.1 <- lmer_fit(data = dplyr::filter(baci, species == sp[2] & phase2 == 1 & propType == 'p(presence)'), period = 'PeriodPh2')
 caau.ph2.2 <- lmer_fit(data = dplyr::filter(baci, species == sp[2] & phase2 == 1 & propType == 'p(presence>1)'), period = 'PeriodPh2')
@@ -34,8 +34,7 @@ summary_coef = function(model) {
     
   return(coef)
 }
-print(summary_coef(anmu.ph1.1))
-
+summary_coef(ftsp.ph1.1)
 # summary - marginal means
 summary_marg = function(model, period) {
   marg.means <- as.data.frame(summary(lsmeans::lsmeans(model, specs = c('exp', period)))) %>%
@@ -46,7 +45,6 @@ summary_marg = function(model, period) {
            'Lower CL' = round(`Lower CL`, 3), 'Upper CL' = round(`Upper CL`, 3))
 }
 
-print(summary_marg(anmu.ph2.1, 'PeriodPh2'))
 
 # summary - contrast + confint
 summary_cont = function(model, period) {

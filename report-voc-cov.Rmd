@@ -16,9 +16,14 @@ output:
 knitr::opts_chunk$set(echo=F, warning=F,message=F,results="hide", prompt=F, error=F)
 ```
 
+
+
+
+
 ```{r}
 source('header.R')
-source('voc-analysis.R')
+lapply(list.files(pattern = "data/*.Rda"), load, file =)
+load(file = ')
 source('voc-plots.R')
 source('voc-captions.R')
 source('spatial.R')
@@ -64,6 +69,15 @@ point(voc.night.m, 'hrmin', 'species', 'Time of Night', 'p(presence)', '1 hour',
 ```{r, voc.night.cov.site, fig.height = 2 "Number of sites in each 10-minute recording period.")}
 coverage(voc.night.cov, 'hrmin', 'sites', 'species', 'Time of Night', 'p(presence)', '1 hour', '%H:%M')
 ```
+##### 1 hour sliding window means
+```{r, window3}
+window3 <- ggplot(filter(voc.night.m, response == 'p(presence)'), aes(label = paste(hour(hrmin), lubridate::minute(hrmin), sep = ':'))) +
+  geom_line(aes(x = hrmin, y = mean.3, color = species)) + 
+  geom_point(aes(x = hrmin, y = max.3), color = 'black') + 
+  geom_label(aes(x = hrmin, y = max.3), hjust = -0.2, vjust = 0.2, size = 3) +  
+  labs(x = 'Time of Night', y = 'p(presence)', color = 'Species') +
+  scale_x_datetime(breaks = date_breaks('2 hours'), labels = date_format("%H:%M", tz = tz_data))  + theme_bw()
+```
 
 ### Seasonal vocalization probabilities, all years combined
 
@@ -78,6 +92,16 @@ point(voc.allyear.m, 'ynight', 'species')
 ```{r, voc.allyear.cov.site, fig.height = 2, fig.width = 7}
 coverage(voc.allyear.cov, 'ynight', 'sites', 'species')
 
+```
+
+##### 14 day sliding window means
+```{r, window14}
+window14 <- ggplot(filter(voc.allyear.m, response == 'p(presence)'), aes(label = paste(month(ynight, label = TRUE), day(ynight), sep = '-'))) + 
+  geom_line(aes(x = ynight, y = mean.14, color = species)) +
+  geom_point(aes(x = ynight, y = max.14), color = 'black') + 
+  geom_label(aes(x = ynight, y = max.14), hjust = -0.2, vjust = 0.2, size = 3) + theme_bw() +
+  labs(x = 'Date', y = 'p(presence)', color = 'Species') +
+  scale_x_datetime(breaks = date_breaks('1 month'), labels = date_format("%b")) 
 ```
 
 ##### Difference between responses

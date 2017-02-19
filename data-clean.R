@@ -4,7 +4,7 @@ source('header.R')
 seabird=read_csv('data/seabird-raw.csv')
 
 # rename columns
-sea <-  dplyr::select(seabird, ID = ID, island = Island, aru = ARU.number, siteID = SiteID_NBR,
+sea <-  dplyr::select(seabird, ID = ID, islet = Island, aru = ARU.number, siteID = SiteID_NBR,
                       long = Long_NBR, lat = Lat_NBR, year = Yr, month = ActualMonth, day = ActualDay,
                       monthstrt = BeginMonth, daystrt = BeginDay,
                       hour.rough = Time.start, rec.order = Recording.Period, rain = Audible.precip,
@@ -26,17 +26,14 @@ sea %<>% mutate(DateTime = ISOdate(year, month, day, hour, minute, tz = tz_data)
 sea %<>% mutate(night = ISOdate(year, monthstrt, daystrt, hour, minute, tz = tz_data))
 
 # fix island names (e.g. alder vs. alder islet)
-sea %<>% mutate(island = recode(island, `Alder Islet` = 'Alder'))
-
-sea %<>% mutate(island = recode(island, `Hotspring Islet` = 'Hotspring')) 
-
+sea %<>% mutate(island = recode(islet, `Alder Islet` = 'Alder', `Hotspring Islet` = 'Hotspring'))
 
 # reduce columns
 sea %<>% select(-minute.rough, -hour.rough, -year, -month, -day, -hour, -minute, -rec.order,
                 -notes.obs, -notes.cap, -team, -ID)
 
 # melt species columns into one column
-sea %<>% melt(id.vars = c('island', 'aru', 'siteID', 'long', 'lat', 'rain', 'noise', 'human.sound', 'jet', 
+sea %<>% melt(id.vars = c('island', 'islet', 'aru', 'siteID', 'long', 'lat', 'rain', 'noise', 'human.sound', 'jet', 
                           'unknown.sound', 'rats', 'phase1', 'phase2', 'DateTime', 'night'),
               measure.vars = c('anmu', 'caau', 'ftsp', 'lesp'), 
               variable.name = 'species')
@@ -71,10 +68,21 @@ sea$species %<>% recode(anmu = "Ancient Murrelet", caau = "Cassin's Auklet",
 sea %<>% mutate(exp = recode(island, Alder = "Control", Arichika = "Impact", Bischofs = "Impact",
                              Faraday = "Impact", Hotspring = "Control", House = "Control",
                              Murchison = "Impact", Ramsay = "Control"),
-                phase1 = ifelse((island == 'Alder' | island == 'Arichika' | island == 'Bischofs' |
-                                  island == 'Hotspring' | island == 'Ramsay') & year(night) < 2014, 1, 0),
-                phase2 = ifelse((island == 'Alder' | island == 'Faraday' | island == 'Murchison' |
-                                  island == 'Hotspring' | island == 'House' | island == 'Ramsay') & year(night) > 2011, 1, 0))
+                phase1 = ifelse(((islet == 'Alder' | island == 'Arichika' | island == 'Bischofs' |
+                                  island == 'House' | island == 'Ramsay') & species == sp[1]) & year(night) < 2014 | 
+                                  ((island == 'Alder' | island == 'Arichika' | island == 'Bischofs' |
+                                      island == 'Hotspring') & species == sp[3]) & year(night) < 2014 |
+                                  ((island == 'Alder' | island == 'Arichika' | island == 'Bischofs' |
+                                      island == 'Hotspring' | island == 'House' | island == 'Ramsay') 
+                                   & species == sp[2])  & year(night) < 2014, 1, 0),
+                                  
+                phase2 = ifelse((((islet == 'Alder' | island == 'Murchison' | island == 'Faraday' |
+                                    island == 'House' | island == 'Ramsay') & species == sp[1]) & year(night) > 2011 | 
+                                  ((island == 'Alder' | island == 'Murchison' | island == 'Faraday' |
+                                      island == 'Hotspring' ) & species == sp[3]) & year(night) > 2011 |
+                                  ((island == 'Alder' | island == 'Murchison' | island == 'Faraday' |
+                                      island == 'Hotspring' | island == 'House' | island == 'Ramsay') 
+                                   & species == sp[2]))  & year(night) > 2011, 1, 0))
 
 # create a p/a variables (pa > 1 and pa2 > 2)
 sea %<>% mutate(pa = replace(presence, presence == 2, 1),
