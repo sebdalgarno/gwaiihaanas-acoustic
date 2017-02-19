@@ -28,20 +28,21 @@ island_props = function(data, vline) {
     theme_bw() + geom_vline(xintercept = vline) + labs(x = 'Year', y = 'Logit (mean proportion)', color = 'Site Class', shape = 'Island Group')
 }
 
-# # diagnostic plots
-plot_diag = function(model) {
-  # residuals vs. fitted
-  resid.fit <- as.data.frame(cbind(Fitted = fitted(model), Residuals= resid(model)))
-  ggplot(data = resid.fit, aes(x = Fitted, y = Residuals)) + geom_point() +theme_bw()
-  
-  # qqplot normality
-  randoms <- ranef(model, postVar = TRUE)
-  qq <- attr(ranef(model, postVar = TRUE)[[1]], 'postVar')
-  read.interc <- randoms$Batch
-  qqdf <- as
-  qqmath(lmer.anmu.ph2.1)
-  plot(lmer.anmu.ph2.1)
-}
+# # # diagnostic plots
+# plot_diag = function(model) {
+#   # residuals vs. fitted
+#   resid.fit <- as.data.frame(cbind(Fitted = fitted(model), Residuals= resid(model)))
+#   ggplot(data = resid.fit, aes(x = Fitted, y = Residuals)) + geom_point() +theme_bw()
+#   
+#   # qqplot normality
+#   randoms <- ranef(model, postVar = TRUE)
+#   qq <- attr(ranef(model, postVar = TRUE)[[1]], 'postVar')
+#   read.interc <- randoms$Batch
+#   qqdf <- as
+#   qqmath(lmer.anmu.ph2.1)
+#   plot(lmer.anmu.ph2.1)
+# }
+
 
 
 

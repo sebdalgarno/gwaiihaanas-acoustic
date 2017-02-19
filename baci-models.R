@@ -1,6 +1,7 @@
 source('header.R')
 source('baci-prep.R')
 
+antilogit <- function(x) { exp(x) / (1 + exp(x) ) }
 # function to fit lmer model
 lmer_fit = function(data, period) {
   form = formula(paste('prop~', period, '+ exp +', period,':exp + (1|yearf) + (1|island/site)'))
@@ -8,10 +9,10 @@ lmer_fit = function(data, period) {
 }
 
 # fit models
-anmu.ph2.1 <- lmer_fit(data = dplyr::filter(baci, species == sp[1] & phase2 == 1 & propType == 'p(presence)'), period = 'PeriodPh2')
-anmu.ph2.2 <- lmer_fit(data = dplyr::filter(baci, species == sp[1] & phase2 == 1 & propType == 'p(presence>1)'), period = 'PeriodPh2')
-anmu.ph1.1 <- lmer_fit(data = dplyr::filter(baci, species == sp[1] & phase1 == 1 & propType == 'p(presence)'), period = 'PeriodPh1')
-anmu.ph1.2 <- lmer_fit(data = dplyr::filter(baci, species == sp[1] & phase1 == 1 & propType == 'p(presence>1)'), period = 'PeriodPh1')
+anmu.ph2.1 <- lmer_fit(data = dplyr::filter(baci, species == sp[1] & phase2 == 1 & propType == 'p(presence)' & island != 'Hotspring'), period = 'PeriodPh2')
+anmu.ph2.2 <- lmer_fit(data = dplyr::filter(baci, species == sp[1] & phase2 == 1 & propType == 'p(presence>1)' & island != 'Hotspring'), period = 'PeriodPh2')
+anmu.ph1.1 <- lmer_fit(data = dplyr::filter(baci, species == sp[1] & phase1 == 1 & propType == 'p(presence)' & island != 'Hotspring'), period = 'PeriodPh1')
+anmu.ph1.2 <- lmer_fit(data = dplyr::filter(baci, species == sp[1] & phase1 == 1 & propType == 'p(presence>1)' & island != 'Hotspring'), period = 'PeriodPh1')
 
 caau.ph2.1 <- lmer_fit(data = dplyr::filter(baci, species == sp[2] & phase2 == 1 & propType == 'p(presence)'), period = 'PeriodPh2')
 caau.ph2.2 <- lmer_fit(data = dplyr::filter(baci, species == sp[2] & phase2 == 1 & propType == 'p(presence>1)'), period = 'PeriodPh2')

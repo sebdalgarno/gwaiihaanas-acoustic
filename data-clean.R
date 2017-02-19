@@ -15,8 +15,8 @@ sea <-  dplyr::select(seabird, ID = ID, island = Island, aru = ARU.number, siteI
 
 # convert DateTime
 # change hour to hours and minutes
-sea %<>% mutate(hour = round(hour.rough, -2)/100,
-                minute.rough = round(hour.rough, -2),
+sea %<>% mutate(hour = round(hour.rough, - 2)/100,
+                minute.rough = round(hour.rough, - 2),
                 minute = hour.rough - minute.rough)
 
 # true DateTime
@@ -74,7 +74,7 @@ sea %<>% mutate(exp = recode(island, Alder = "Control", Arichika = "Impact", Bis
                 phase1 = ifelse((island == 'Alder' | island == 'Arichika' | island == 'Bischofs' |
                                   island == 'Hotspring' | island == 'Ramsay') & year(night) < 2014, 1, 0),
                 phase2 = ifelse((island == 'Alder' | island == 'Faraday' | island == 'Murchison' |
-                                  island == 'Hotspring' | island == 'House' | island == 'Ramsay') & year(night) > 2010, 1, 0))
+                                  island == 'Hotspring' | island == 'House' | island == 'Ramsay') & year(night) > 2011, 1, 0))
 
 # create a p/a variables (pa > 1 and pa2 > 2)
 sea %<>% mutate(pa = replace(presence, presence == 2, 1),
@@ -89,11 +89,11 @@ sea %<>% mutate(hour.min = paste(hour(night), lubridate::minute(night), sep=":")
                                    origin = "1970-01-01", tz = tz_data),
                 hour.min = NULL,
                 hourmin = NULL,
-                ynight = as.Date(paste(2000, lubridate::yday(night), 1, sep = '-'),' %Y-%j-%H'), # note that year is arbitrary
+                ynight = as.Date(paste(2010, lubridate::yday(night), 1, sep = '-'),' %Y-%j-%H'), # note that year is arbitrary
                 year = year(night),
-                week = as.Date(paste(2000, lubridate::week(night), 5, sep = '-'),' %Y-%U-%u') # note that year is arbitrary
-)
-
+                week = as.Date(paste(2010, lubridate::week(night), 5, sep = '-'),' %Y-%U-%u')) %>% # note that year is arbitrary
+  
+  mutate(ynight = ymd_hms(paste(as.character(ynight), '00:00:00', sep = ' '), tz = tz_data))
 
 save(sea, file = 'data/sea-clean.Rda')
 # create a spatial points data.frame

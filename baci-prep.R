@@ -1,5 +1,4 @@
 source('header.R')
-source('data-clean.R')
 
   ## create phase 2 time intervals to find max overlap
   load('data/sea-clean.Rda')
@@ -28,8 +27,8 @@ source('data-clean.R')
   # filter by night samping window for each species
   seabaci %<>% filter(hour(night) >= 0 & hour(night) <=3  & species == sp[1] |
                   hour(night) >= 0 & hour(night) <=3  & species == sp[3] |
-                  hour(night) >= 1 & hour(night) <=4  & species == sp[2] 
-                  )
+                  hour(night) >= 1 & hour(night) <=4  & species == sp[2] )
+  
   # create period variable
   seabaci %<>% mutate(PeriodPh2 = ifelse(year<= 2013, 'Before', 'After'),
                       PeriodPh1 = ifelse(year<= 2011, 'Before', 'After'))

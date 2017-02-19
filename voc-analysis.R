@@ -1,5 +1,5 @@
 source('header.R')
-source('dat-clean.R')
+source('data-clean.R')
 
 vocalizations <- function() {
   
@@ -15,142 +15,169 @@ vocalizations <- function() {
     
     filter(prop1 > 0.01)
 
-  
-  # filter main data set, including only matching Species and siteID as above
   seavoc <- mutate(sea, sparu = paste0(species, siteID)) %>% filter(sparu %in% sitedet$sparu) %>% mutate(sparu = NULL)
-  # check
-  tmp <- ddply(seavoc, .(species, siteID), dplyr::summarise, trials = length(siteID))
-  tmp <- ddply(sea, .(species, siteID), dplyr::summarise, trials = length(siteID))
-  rm(tmp)
+
+  ### nightly vocalization probability
+  # first at sites
+  voc.night <- ddply(seavoc, .(species, siteID, hrmin), dplyr::summarize, trials = length(hrmin), success1 = sum(pa), success2 = sum(pa2)) 
+  
+  # for boxplots
+  voc.night.box <- mutate(voc.night, prop1 = success1/trials,
+                                     prop2 = success2/trials)
+  
+  save(voc.night.box, file = 'data/voc-night-box.Rda')
+  
+  # mean of sites
+      voc.night.m <- ddply(voc.night, .(species, hrmin), dplyr::summarise, 
+                           n = length(hrmin),
+                           mean1 = mean(success1/trials),
+                           mean2 = mean(success2/trials),
+                           lower1 = mean1 - 1.96 * ((sd(success1/trials)/sqrt(n))),  
+                           upper1 = mean1 + 1.96 * ((sd(success1/trials)/sqrt(n))),
+                           lower2 = mean2 - 1.96 * ((sd(success2/trials)/sqrt(n))),
+                           upper2 = mean2 + 1.96 * ((sd(success2/trials)/sqrt(n))))
+      
+      voc.night.m %<>% group_by(species) %>%
+        
+      # sliding window
+      mutate(mean1.3 = rollapply(mean1, width = 3, FUN = mean, fill = NA),
+             mean2.3 = rollapply(mean2, width = 3, FUN = mean, fill = NA)) %>%
+      
+      # which max  
+      mutate(hour1 = ifelse(mean1.3 == max(mean1.3, na.rm = TRUE), max(mean1.3, na.rm = TRUE), NA),
+              hour2 = ifelse(mean2.3 == max(mean2.3, na.rm = TRUE), max(mean2.3, na.rm = TRUE), NA)) %>%
+    
+    # melt mean type for plotting
+    melt(measure.vars = c('mean1', 'mean2'), variable.name = 'response', value.name = 'mean') %>%
+    
+    # carry over other vars
+    mutate(lower = ifelse(response == 'mean1', lower1, lower2),
+           upper = ifelse(response == 'mean1', upper1, upper2),
+           mean.3 = ifelse(response == 'mean1', mean1.3, mean2.3),
+           max.3 = ifelse(response == 'mean1', hour1, hour2),
+           lower1 = NULL, lower2 = NULL, upper1 = NULL, 
+           upper2 = NULL, mean1.3 = NULL, mean2.3 = NULL,
+           hour1 = NULL, hour2 = NULL) %>%
+        
+        # replace negative lower CL with 0, change mean1 and mean2
+        mutate(lower = replace(lower, lower < 0, 0),
+               upper = replace(upper, upper < 0, 0)) 
+        
+    voc.night.m$response %<>% recode(mean1 = 'p(presence)', mean2 = 'p(presence>1)')
+  
+  save(voc.night.m, file = 'data/voc-night-m.Rda')
+  
+  # coverage
+  voc.night.cov <- ddply(seavoc, .(species, hrmin), dplyr::summarise, sites = sum(length(unique(siteID))), recordings = length(hrmin))
+  
+  save(voc.night.cov, file = 'data/voc-night-cov.Rda')
+  
+  ### seasonal vocalization probability
+  # site means
+  voc.allyear.m <- plyr::ddply(seavoc, .(species, siteID, ynight), dplyr::summarise, 
+                         trials = length(ynight),
+                         success1 = sum(pa), 
+                         success2 = sum(pa2)) 
+  
+  voc.allyear.m %<>% plyr::ddply(.(species, ynight), dplyr::summarise, 
+                       n = length(ynight),
+                       mean1 = mean(success1/trials),
+                       mean2 = mean(success2/trials),
+                       lower1 = mean1 - 1.96 * ((sd(success1/trials)/sqrt(n))),  
+                       upper1 = mean1 + 1.96 * ((sd(success1/trials)/sqrt(n))),
+                       lower2 = mean2 - 1.96 * ((sd(success2/trials)/sqrt(n))),
+                       upper2 = mean2 + 1.96 * ((sd(success2/trials)/sqrt(n))))
+  
+  voc.allyear.diff <- mutate(voc.allyear.m, meandiff = mean1 - mean2)
+  
+  save(voc.allyear.diff, file = 'data/voc-allyear-diff.Rda')
+    
+    # sliding window
+  voc.allyear.m %<>% group_by(species) %>%
+    
+    mutate(mean1.14 = zoo::rollapply(mean1, width = 14, FUN = mean, fill = NA),
+           mean2.14 = zoo::rollapply(mean2, width = 14, FUN = mean, fill = NA)) %>%
+    
+    # which max  
+    mutate(night1 = ifelse(mean1.14 == max(mean1.14, na.rm = TRUE), max(mean1.14, na.rm = TRUE), NA),
+           night2 = ifelse(mean2.14 == max(mean2.14, na.rm = TRUE), max(mean2.14, na.rm = TRUE), NA)) %>%
+    
+    # melt mean type for plotting
+    melt(measure.vars = c('mean1', 'mean2'), variable.name = 'response', value.name = 'mean') %>%
+    
+    # carry over other vars
+    mutate(lower = ifelse(response == 'mean1', lower1, lower2),
+           upper = ifelse(response == 'mean1', upper1, upper2),
+           mean.14 = ifelse(response == 'mean1', mean1.14, mean2.14),
+           max.14 = ifelse(response == 'mean1', night1, night2),
+           lower1 = NULL, lower2 = NULL, upper1 = NULL, 
+           upper2 = NULL, mean1.14 = NULL, mean2.14 = NULL,
+           night1 = NULL, night2 = NULL) %>%
+  
+  # replace negative lower CL with 0, change mean1 and mean2
+  mutate(lower = replace(lower, lower < 0, 0),
+         upper = replace(upper, upper < 0, 0)) 
+    
+  voc.allyear.m$response %<>% recode(mean1 = 'p(presence)', mean2 = 'p(presence>1)')
+  
+  save(voc.allyear.m, file = 'data/voc-allyear-m.Rda')
+    
+  # calculate means for each year                     
+  voc.byyear.m <- ddply(seavoc, .(species, siteID, year, ynight), dplyr::summarise, 
+                        trials = length(ynight),
+                        success1 = sum(pa), 
+                        success2 = sum(pa2)) 
   
   
-  # calculate nightly vocalization rates
-  voc.night <- ddply(seavoc, .(species, siteID, hrmin), dplyr::summarize, trials = length(hrmin), success1 = sum(pa), success2 = sum(pa2)) %>%
+  voc.byyear.m %<>% ddply(.(species, year, ynight), dplyr::summarise, n = length(ynight), 
+                          mean1 = mean(success1/trials), 
+                          mean2 = mean(success2/trials),
+                          lower1 = mean1 - 1.96 * ((sd(success1/trials)/sqrt(n))),  
+                          upper1 = mean1 + 1.96 * ((sd(success1/trials)/sqrt(n))),
+                          lower2 = mean2 - 1.96 * ((sd(success2/trials)/sqrt(n))),
+                          upper2 = mean2 + 1.96 * ((sd(success2/trials)/sqrt(n))))
+  
+  save(voc.byyear.m, file = 'data/voc-byyear-m.Rda')
+  
+  # boxplots by week
+  # all year
+  voc.allyear.box <- ddply(seavoc, .(species, siteID, week), dplyr::summarise, 
+                           trials = length(ynight),
+                           success1 = sum(pa), 
+                           success2 = sum(pa2)) %>%
     
     mutate(prop1 = success1/trials,
            prop2 = success2/trials)
   
-  voc.night.m <- ddply(voc.night, .(species, hrmin), dplyr::summarize, n = length(hrmin), mean1 = mean(success1/trials), mean2 = mean(success2/trials),
-                       sd1 = sd(success1/trials), sd2 = sd(success2/trials), se1 = sd1/ sqrt(n), se2 = sd2/sqrt(n),
-                       lower1 = mean1 - (1.96 * se1), upper1 = mean1 + (1.96 * se1), lower2 = mean2 - (1.96 * se2), upper2 = mean2 + (1.96 * se2))
- 
-  voc.night.m %<>% group_by(species) %>%
+  save(voc.allyear.box, file = 'data/voc-allyear-box.Rda')
+  
+  # by year
+  voc.byyear.box <- ddply(seavoc, .(species, year, siteID, week), dplyr::summarise, 
+                          trials = length(ynight),
+                          success1 = sum(pa), 
+                          success2 = sum(pa2)) %>%
     
-    mutate(mean1.14 = rollapply(mean1, width = 3, FUN = mean, fill = NA, align = 'right'),
-           mean2.14 = rollapply(mean2, width = 3, FUN = mean, fill = NA, align = 'right')) 
+    mutate(prop1 = success1/trials,
+           prop2 = success2/trials)
   
-  voc.night.m %<>%  group_by(species) %>%
-    
-    mutate(hour1 = ifelse(mean1.14 == max(mean1.14, na.rm = TRUE), max(mean1.14, na.rm = TRUE), NA),
-           hour2 = ifelse(mean2.14 == max(mean2.14, na.rm = TRUE), max(mean2.14, na.rm = TRUE), NA))
-  
-  save(voc.night.m, file = 'data/voc-night-means.Rda')
-  # coverage
-  voc.night.cov <- ddply(seavoc, .(species, hrmin), dplyr::summarize, sites = sum(length(unique(siteID))), recordings = length(hrmin))
-  
-  
-  ### seasonal vocalization rates
-  # calc proportion by night
-  voc.allyear <- ddply(seavoc, .(species, ynight), dplyr::summarize, trials = length(ynight), success1 = sum(pa), success2 = sum(pa2), NightTime = first(night)) %>%
-                         mutate(mean1 = binconf(success1, trials)[,1],
-                                lower1 = binconf(success1, trials)[,2],
-                                upper1 = binconf(success1, trials)[,3],
-                                mean2 = binconf(success2, trials)[,1],
-                                lower2 = binconf(success2, trials)[,2],
-                                upper2 = binconf(success2, trials)[,3])                        
-                      
-  
-   
-    # mutate(prop1 = success1 / trials,
-    #        prop2 = success2 / trials)
-  
-  voc.byyear <- ddply(seavoc, .(species, siteID, year, ynight), dplyr::summarize, trials = length(ynight), success1 = sum(pa), success2 = sum(pa2), NightTime = first(night)) %>%
-    
-    mutate(prop1 = success1 / trials,
-           prop2 = success2 / trials)
-  
-  # calc proportion by week (for boxplots)
-  # voc.allyear.w <- ddply(seavoc, .(species, siteID, week), dplyr::summarize, trials = length(week), success1 = sum(pa), success2 = sum(pa2), NightTime = first(night)) %>%
-  #   
-  #   mutate(prop1 = success1 / trials,
-  #          prop2 = success2 / trials)
-  
-  # voc.byyear.w <- ddply(seavoc, .(species, siteID, year, week), dplyr::summarize, trials = length(week), success1 = sum(pa), success2 = sum(pa2), NightTime = first(night)) %>%
-  #   
-  #   mutate(prop1 = success1 / trials,
-  #          prop2 = success2 / trials)
-  
-  # function to calculate confidence interval limits and se
-  voc.allyear.m <- ddply(voc.allyear, .(species, ynight), dplyr::summarize, n = length(ynight), mean1 = mean(success1/trials), mean2 = mean(success2/trials),
-                         lower1 = mean1 - 1.96 * ((sd(success1/trials)/sqrt(n))),  
-                         upper1 = mean1 + 1.96 * ((sd(success1/trials)/sqrt(n))),
-                         lower2 = mean2 - 1.96 * ((sd(success2/trials)/sqrt(n))),
-                         upper2 = mean2 + 1.96 * ((sd(success2/trials)/sqrt(n))))
-  
-  ### find optimal sampling window
-  voc.allyear.m %<>% group_by(species) %>%
-    
-    mutate(mean1.14 = rollapply(mean1, width = 14, FUN = mean, fill = NA),
-           mean2.14 = rollapply(mean2, width = 14, FUN = mean, fill = NA)) 
-    
-  voc.allyear.m %<>%  group_by(species) %>%
-    
-    mutate(day1 = ifelse(mean1.14 == max(mean1.14, na.rm = TRUE), max(mean1.14, na.rm = TRUE), NA),
-           day2 = ifelse(mean2.14 == max(mean2.14, na.rm = TRUE), max(mean2.14, na.rm = TRUE), NA))
-                            
-  
-  save(voc.allyear.m, file = 'data/voc-year-means.Rda')
-  
-  voc.byyear.m <- ddply(voc.byyear, .(species, year, ynight), dplyr::summarize, n = length(ynight), mean1 = mean(success1/trials), mean2 = mean(success2/trials),
-                         lower1 = mean1 - (qt(.975, df = n-1) * ((sd(success1/trials)/sqrt(n)))),  
-                         upper1 = mean1 + (qt(.975, df = n-1) * ((sd(success1/trials)/sqrt(n)))),
-                         lower2 = mean2 - (qt(.975, df = n-1) * ((sd(success2/trials)/sqrt(n)))),
-                         upper2 = mean2 + (qt(.975, df = n-1) * ((sd(success2/trials)/sqrt(n)))))
-  
-  # filter species
-  # voc.byyear.anmu.w <- filter(voc.byyear.w, species == 'Ancient Murrelet')
-  # voc.byyear.caau.w <- filter(voc.byyear.w, species == "Cassin's Auklet")
-  # voc.byyear.ftsp.w <- filter(voc.byyear.w, species == "Fork-tailed Storm Petrel")
-  # voc.byyear.lesp.w <- filter(voc.byyear.w, species == "Leach's Storm Petrel")
-  
-  # filter species
-  voc.byyear.anmu.m <- filter(voc.byyear.m, species == 'Ancient Murrelet')
-  voc.byyear.caau.m <- filter(voc.byyear.m, species == "Cassin's Auklet")
-  voc.byyear.ftsp.m <- filter(voc.byyear.m, species == "Fork-Tailed Storm-Petrel")
-  voc.byyear.lesp.m <- filter(voc.byyear.m, species == "Leach's Storm-Petrel")
+  save(voc.byyear.box, file = 'data/voc-byyear-box.Rda')
   
   # coverage for all years
-  voc.allyear.cov <- ddply(seavoc, .(species, yday(night)), dplyr::summarize, sites = sum(length(unique(siteID))), recordings = length(yday(night)))
+  voc.allyear.cov <- ddply(seavoc, .(species, ynight), dplyr::summarize, 
+                           sites = sum(length(unique(siteID))), recordings = length(ynight)) 
   
-  # coverage for each year
-  voc.byyear.cov <- ddply(seavoc, .(species, year(night), yday(night)), dplyr::summarize, sites = sum(length(unique(siteID))), recordings = length(yday(night)))
-  # filter species
-  voc.byyear.anmu.cov <- filter(voc.byyear.cov, species == 'Ancient Murrelet')
-  voc.byyear.caau.cov <- filter(voc.byyear.cov, species == "Cassin's Auklet")
-  voc.byyear.ftsp.cov <- filter(voc.byyear.cov, species == "Fork-Tailed Storm-Petrel")
-  voc.byyear.lesp.cov <- filter(voc.byyear.cov, species == "Leach's Storm-Petrel")
-
+  save(voc.allyear.cov, file = 'data/voc-allyear-cov.Rda')
+  # voc.allyear.cov %<>% melt(measure.vars = c('Sites', 'Recordings'), variable.name = 'unit', value.name = 'frequency')
   
-  voc.allyear.m$mean14 <- rollapply(voc.allyear.m$mean1, width = 14, FUN = mean, partial = TRUE)
-  voc.allyear.m$mean214 <- rollapply(voc.allyear.m$mean2, width = 14, FUN = mean, partial = TRUE)
-  voc.night.m$mean14 <- rollapply(voc.night.m$mean1, width = 14, FUN = mean, partial = TRUE)
-  voc.night.m$mean214 <- rollapply(voc.night.m$mean2, width = 14, FUN = mean, partial = TRUE)
+  # coverage by year
+  voc.byyear.cov <- ddply(seavoc, .(species, year, ynight), dplyr::summarize, 
+                          sites = sum(length(unique(siteID))), recordings = length(ynight)) 
   
-  }
-
+  save(voc.byyear.cov, file = 'data/voc-byyear-cov.Rda')
+}
 vocalizations()
 
-# # wilson binomial confidence intervals
-# # function
-# confint <- function(data) {
-#   data %<>% mutate(prop1 = Hmisc::binconf(success1, trials)[,1],
-#                    lower1 = Hmisc::binconf(success1, trials)[,2],
-#                    upper1 = Hmisc::binconf(success1, trials)[,3],
-#                    prop2 = Hmisc::binconf(success2, trials)[,1],
-#                    lower2 = Hmisc::binconf(success2, trials)[,2],
-#                    upper2 = Hmisc::binconf(success2, trials)[,3])
-#   
-# }
+
 
 
 
