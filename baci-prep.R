@@ -22,7 +22,7 @@ source('header.R')
   
   # filter by date sampling window for each species
   seabaci %<>% filter(yday(night) >= yday(y.window[1,2]) &  yday(night) <= yday(y.window[1,3]) & species == sp[1] |
-                      yday(night) >= yday(y.window[2,2]) &  yday(night) <= yday(y.window[2,3]) & species == sp[2] | ## second peak in vocal activity
+                      yday(night) >= yday(y.window[2,2]) &  yday(night) <= yday(y.window[2,3]) & species == sp[2] | 
                       yday(night) >= yday(y.window[3,2]) &  yday(night) <= yday(y.window[3,3]) & species == sp[3])
   
   

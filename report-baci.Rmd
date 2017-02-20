@@ -18,8 +18,8 @@ knitr::opts_chunk$set(cache = TRUE, echo=F, warning=F,message=F,results="hide", 
 
 ```{r}
 source('header.R')
-source('baci-plots.R')
 source('baci-prep.R')
+source('baci-plots.R')
 source('baci-models.R')
 source('baci-captions.R')
 ```
@@ -60,13 +60,13 @@ Key assumptions of the model:
 `r figs("anmu.temp.ph1")`
 
 ```{r anmu.temp.ph1)}
-tempcov_baci(data = filter(sea, phase1 == 1 & island != 'Hotspring'), x = 'night', y = 'siteID', color = 'exp', date.start = '05-11', date.end = '05-24')
+tempcov_baci(data = filter(sea, phase1 == 1 & species == sp[1]), x = 'night', y = 'siteID', color = 'exp', date.start = y.window[1,2], date.end = y.window[1,3])
 ```
   
 `r figs("anmu.temp.ph2")`
 
 ```{r anmu.temp.ph2)}
-tempcov_baci(data = filter(sea, phase2 == 1 & island != 'Hotspring'), x = 'night', y = 'siteID', color = 'exp', date.start = '05-11', date.end = '05-24')
+tempcov_baci(data = filter(sea, phase2 == 1 & species == sp[1]), x = 'night', y = 'siteID', color = 'exp', date.start = y.window[1,2], date.end = y.window[1,3])
 ```
   
 ### Mean proportions by island
@@ -157,13 +157,13 @@ kable(summary_cont(anmu.ph2.2, 'PeriodPh2'))
 `r figs("caau.temp.ph1")`
 
 ```{r caau.temp.ph1)}
-tempcov_baci(data = filter(sea, phase1 == 1), x = 'night', y = 'siteID', color = 'exp', date.start = '05-01', date.end = '05-14')
+tempcov_baci(data = filter(sea, phase1 == 1 & species == sp[2]), x = 'night', y = 'siteID', color = 'exp', date.start = y.window[2,2], date.end = y.window[2,3])
 ```
   
 `r figs("caau.temp.ph2")`
 
 ```{r caau.temp.ph2)}
-tempcov_baci(data = filter(sea, phase2 == 1), x = 'night', y = 'siteID', color = 'exp', date.start = '05-01', date.end = '05-14')
+tempcov_baci(data = filter(sea, phase2 == 1 & species == sp[2]), x = 'night', y = 'siteID', color = 'exp', date.start = y.window[2,2], date.end = y.window[2,3])
 ```
   
 ### Mean proportions by island
@@ -248,13 +248,13 @@ kable(summary_cont(caau.ph2.2, 'PeriodPh2'))
 `r figs("ftsp.temp.ph1")`
 
 ```{r ftsp.temp.ph1)}
-tempcov_baci(data = filter(sea, phase1 == 1), x = 'night', y = 'siteID', color = 'exp', date.start = '05-01', date.end = '05-14')
+tempcov_baci(data = filter(sea, phase1 == 1 & species == sp[3]), x = 'night', y = 'siteID', color = 'exp', date.start = y.window[3,2], date.end = y.window[3,3])
 ```
   
 `r figs("ftsp.temp.ph2")`
 
 ```{r ftsp.temp.ph2)}
-tempcov_baci(data = filter(sea, phase2 == 1), x = 'night', y = 'siteID', color = 'exp', date.start = '05-01', date.end = '05-14')
+tempcov_baci(data = filter(sea, phase2 == 1 & species == sp[3]), x = 'night', y = 'siteID', color = 'exp', date.start = y.window[3,2], date.end = y.window[3,3])
 ```
   
 ### Mean proportions by island

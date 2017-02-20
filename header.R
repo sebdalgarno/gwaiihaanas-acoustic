@@ -37,14 +37,18 @@ tz_data = 'Etc/GMT+8'
 
 sp = c('Ancient Murrelet', "Cassin's Auklet", "Fork-Tailed Storm-Petrel", "Leach's Storm-Petrel")
 
+control.anmu.ph1 <- c('Ramsay', 'Alder')
+control.anmu.ph2 <- c('House', 'Ramsay', 'Alder')
+control.ftsp.ph1 <- c('Hostpring', 'Alder')
+control.ftsp.ph2 <- c('Hostpring', 'Hotspring Islet', 'Alder Islet', 'Alder')
+control.caau.ph1 <- c('Alder', 'Hotspring')
+control.caau.ph2 <- c('Alder', 'Hotspring', 'Hotspring Islet', 'Alder Islet')
+impact.phase1 <- c('Arichika', 'Bischofs')
+impact.phase2 <- c('Murchison', 'Faraday')
+
 task2a <- 'Describe seabird and songbird data coverage in space and time with appropriate plots.'
-
 task2b <- 'If possible (not mandatory), describe the seasonal variation in songbird vocalization rates, overall, and by selected species (SEASON = Early, Mid, Late). This is meant to be an exploratory analyses, not a polished result.'
-
 task2c <- 'Describe the annual and nightly variation in seabird vocalization (proportion of recordings with presence, and proportion of recordings with presence of multiple individuals), by species (appropriate figures such as box plots).'
-
 task2d <- 'Examine effects of year, rat status, island on seabird vocalization metrics as agreed upon, and departure time.'
-
 task2e <- 'Test whether restoration resulted in an increase in seabird vocalization metrics, by species (abundance), using BACI design.'
-
 task2f <- 'Test whether restoration resulted in a lengthened seabird departure time from rat-infested islands.'

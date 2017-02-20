@@ -6,21 +6,21 @@ tempcov_baci = function(data, x, y, color, date.start, date.end) {
     labs(x = 'Date', y = 'SiteID', color = 'Site Class') +
     scale_x_datetime(breaks = date_breaks('3 months'), labels = date_format("%b-%Y"))  +
     theme(axis.text.x = element_text(angle = 90, size = 9)) + 
-    geom_vline(xintercept = as.numeric(as.POSIXct(paste('2010-', date.start, '-',' ', "00:", "00:", "00", sep = '')))) +
-    geom_vline(xintercept = as.numeric(as.POSIXct(paste('2010-', date.end, '-',' ', "00:", "00:", "00", sep = '')))) +
-    geom_vline(xintercept = as.numeric(as.POSIXct(paste('2011-', date.start, '-',' ', "00:", "00:", "00", sep = '')))) +
-    geom_vline(xintercept = as.numeric(as.POSIXct(paste('2011-', date.end, '-',' ', "00:", "00:", "00", sep = '')))) +
-    geom_vline(xintercept = as.numeric(as.POSIXct(paste('2012-', date.start, '-',' ', "00:", "00:", "00", sep = '')))) +
-    geom_vline(xintercept = as.numeric(as.POSIXct(paste('2012-', date.end, '-',' ', "00:", "00:", "00", sep = '')))) +
-    geom_vline(xintercept = as.numeric(as.POSIXct(paste('2013-', date.start, '-',' ', "00:", "00:", "00", sep = '')))) +
-    geom_vline(xintercept = as.numeric(as.POSIXct(paste('2013-', date.end, '-',' ', "00:", "00:", "00", sep = '')))) +
-    geom_vline(xintercept = as.numeric(as.POSIXct(paste('2014-', date.start, '-',' ', "00:", "00:", "00", sep = '')))) +
-    geom_vline(xintercept = as.numeric(as.POSIXct(paste('2014-', date.end, '-',' ', "00:", "00:", "00", sep = '')))) +
-    geom_vline(xintercept = as.numeric(as.POSIXct(paste('2015-', date.start, '-',' ', "00:", "00:", "00", sep = '')))) +
-    geom_vline(xintercept = as.numeric(as.POSIXct(paste('2015-', date.end, '-',' ', "00:", "00:", "00", sep = '')))) 
+    geom_vline(xintercept = as.numeric(date.start + years(1))) +
+    geom_vline(xintercept = as.numeric(date.end + years(1))) +
+    geom_vline(xintercept = as.numeric(date.start + years(2))) +
+    geom_vline(xintercept = as.numeric(date.end + years(2))) +
+    geom_vline(xintercept = as.numeric(date.start + years(3))) +
+    geom_vline(xintercept = as.numeric(date.end + years(3))) +
+    geom_vline(xintercept = as.numeric(date.start + years(4))) +
+    geom_vline(xintercept = as.numeric(date.end + years(4))) +
+    geom_vline(xintercept = as.numeric(date.start + years(5))) +
+    geom_vline(xintercept = as.numeric(date.end + years(5))) 
+    # geom_vline(xintercept = as.numeric(as.POSIXct(paste(vline, '11-01', sep = '-')), tz = tz_data), color = 'blue')
 }
 
-
+tempcov_baci(data = filter(sea, phase1 == 1 & species == sp[1]), x = 'night', y = 'siteID', color = 'exp', 
+             date.start = y.window[1,2], date.end = y.window[1,3])
 # props x island
 island_props = function(data, vline) {
   ggplot(data, aes(x = year, y = mean.prop,  color = exp, shape = island)) +
