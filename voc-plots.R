@@ -32,7 +32,7 @@ boxplot <- function(data, x, y, group, facet, xlab = 'Date', ylab = 'p(presence)
 }
 
 ### function for coverage plots
-coverage <- function (data, x, y, facet, xlab = 'Date', ylab = 'Number of Sites', date.breaks = '1 month', date.format = '%b', ncol = 4) {
+coverage <- function (data, x, y, facet, xlab = 'Date', ylab = 'n(Site:Year Combinations)', date.breaks = '1 month', date.format = '%b', ncol = 4) {
   ggplot(data) +
     geom_line( aes_string(x = x, y = y), size = 0.5) +
     # geom_bar( aes_string(x = x, y = y), stat = 'identity', width = 0.1)  + 

@@ -20,8 +20,7 @@ voc_analysis <- function() {
   
   ### nightly vocalization probability
   # first at sites
-  voc.night <- ddply(seavoc, .(species, siteID, hrmin), dplyr::summarize, trials = n(), success1 = sum(pa), success2 = sum(pa2)) 
-  tmp <- ddply(seavoc, .(species, siteID, year, hrmin), dplyr::summarize, trials = n(), success1 = sum(pa), success2 = sum(pa2)) 
+  voc.night <- ddply(seavoc, .(species, siteID, year, hrmin), dplyr::summarize, trials = n(), success1 = sum(pa), success2 = sum(pa2)) 
 
   # for boxplots
   voc.night.box <- mutate(voc.night, prop1 = success1/trials,
@@ -31,7 +30,7 @@ voc_analysis <- function() {
   
   # mean of sites
   voc.night.m <- ddply(voc.night, .(species, hrmin), dplyr::summarise, 
-                       n = length(hrmin),
+                       n = n(),
                        mean1 = mean(success1/trials),
                        mean2 = mean(success2/trials),
                        lower1 = mean1 - sd(success1/trials)/sqrt(n),  
@@ -76,13 +75,13 @@ voc_analysis <- function() {
   
   ### seasonal vocalization probability
   # site means
-  voc.allyear.m <- plyr::ddply(seavoc, .(species, siteID, ynight), dplyr::summarise, 
+  voc.allyear.m <- plyr::ddply(seavoc, .(species, siteID, year, ynight), dplyr::summarise, 
                                trials = length(ynight),
                                success1 = sum(pa), 
                                success2 = sum(pa2)) 
   
   voc.allyear.m %<>% plyr::ddply(.(species, ynight), dplyr::summarise, 
-                                 n = length(ynight),
+                                 n = n(),
                                  mean1 = mean(success1/trials),
                                  mean2 = mean(success2/trials),
                                  lower1 = mean1 - sd(success1/trials)/sqrt(n),  
@@ -180,7 +179,7 @@ voc_analysis <- function() {
   
   # coverage for all years
   voc.allyear.cov <- ddply(seavoc, .(species, ynight), dplyr::summarize, 
-                           sites = sum(length(unique(siteID))), recordings = length(ynight)) 
+                           sites = sum(length(unique(siteID))), recordings = n()) 
   
   save(voc.allyear.cov, file = 'data/voc-allyear-cov.Rda')
   # voc.allyear.cov %<>% melt(measure.vars = c('Sites', 'Recordings'), variable.name = 'unit', value.name = 'frequency')
