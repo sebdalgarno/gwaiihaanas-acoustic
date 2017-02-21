@@ -33,6 +33,9 @@ convert_proj <- function(data, data.x = "Long", data.y = "Lat", data.CRS = "+ini
   sp::spTransform(data, new.CRS)
 }
 
+theme_big <- theme(axis.title = element_text(size = 18), legend.title = element_text(size = 18), 
+                   legend.text = element_text(size = 12), strip.text = element_text(size = 14)) 
+
 tz_data = 'Etc/GMT+8'
 
 sp = c('Ancient Murrelet', "Cassin's Auklet", "Fork-Tailed Storm-Petrel", "Leach's Storm-Petrel")
@@ -45,6 +48,8 @@ control.caau.ph1 <- c('Alder', 'Hotspring')
 control.caau.ph2 <- c('Alder', 'Hotspring', 'Hotspring Islet', 'Alder Islet')
 impact.phase1 <- c('Arichika', 'Bischofs')
 impact.phase2 <- c('Murchison', 'Faraday')
+phase1 <- c('Arichika', 'Bischofs', 'Ramsay', 'Alder', 'Hostpring')
+phase2 <- c('Murchison', 'Faraday', 'Hotspring', 'House', 'Alder', 'Ramsay')
 
 task2a <- 'Describe seabird and songbird data coverage in space and time with appropriate plots.'
 task2b <- 'If possible (not mandatory), describe the seasonal variation in songbird vocalization rates, overall, and by selected species (SEASON = Early, Mid, Late). This is meant to be an exploratory analyses, not a polished result.'

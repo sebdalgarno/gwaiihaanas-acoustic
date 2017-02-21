@@ -1,29 +1,23 @@
 ---
-title: "Short-term impacts of island restoration on seabirds in Gwaii Haanas"
+title: "Short-term Impacts of Island Restoration on Seabirds in Gwaii Haanas: Coverage and Vocalisation Probability"
 knit: (function(inputFile, encoding) { 
       out_dir <- 'reports';
       ext <- '.html';
       rmarkdown::render(inputFile,
                         encoding=encoding, 
-                        output_file=file.path(dirname(inputFile), out_dir,  paste('GH-acoustic-Report-', lubridate::date(Sys.time()), ext, sep = ''))) })
+                        output_file=file.path(dirname(inputFile), out_dir,  paste('GH-acoustic-Report-Voc-', lubridate::date(Sys.time()), ext, sep = ''))) })
 output:
-  html_document:
-    fig_caption: true
+  html_document
 
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo=F, warning=F,message=F,results="hide", prompt=F, error=F)
+knitr::opts_chunk$set(cache = TRUE, echo=F, warning=F,message=F,results="hide", prompt=F, error=F, fig.path = 'reports/files/')
 ```
-
-
-
-
 
 ```{r}
 source('header.R')
-lapply(list.files(pattern = "data/*.Rda"), load, file =)
-load(file = ')
+lapply(list.files(path = 'data', pattern = "*.Rda", full.names = TRUE), load, .GlobalEnv)
 source('voc-plots.R')
 source('voc-captions.R')
 source('spatial.R')
@@ -33,26 +27,29 @@ source('spatial.R')
 Task 2a) `r task2a`
 
 
-`r figs("spatnorth")`
+`r figs("spatnorth.ph2")`
+
 ```{r spatnorth, fig_height = 5}
-mapnorth
+mapnorth_ph2()
 ```
 
-`r figs("spatsouth")`
+`r figs("spatsouth.ph2")`
+
 ```{r spatsouth, fig_height = 4}
-mapsouth
+mapsouth_ph2()
 ```
 
-`r figs("tempcov")`
-```{r tempcov, fig_height = 4}
-tempcov
+`r figs("tempcov.ph2")`
+
+```{r tempcov, fig.height = 5, fig.width = 10}
+tempcov(data = filter(sea, phase2 == 1))
 ```
 
 # Vocalization Probability
 Task 2c) `r task2c`
 
 ## Methods
-Acoustic Recording Units (ARUs) were located at sites to target breeding habitat of certain species. Some sites had no or very few detections of certain species. For description of vocalization probabilities for each species, we included only those sites deemed to have substantial vocalization activity, defined as any site with a proportion of recordings with detection > 0.01, for a particular species. This approach was taken rather than relying on a priori understanding of habitat and colony locations. For Ancient Murrelets, Cassin's Auklets, Fork-Tailed Storm-Petrels, and Leach's Storm-Petrels: `r ddply(sitedet, .(species), summarise, length = length(species))$length[1]`, `r ddply(sitedet, .(species), summarise, length = length(species))$length[2]`, `r ddply(sitedet, .(species), summarise, length = length(species))$length[3]` and `r ddply(sitedet, .(species), summarise, length = length(species))$length[4]` sites had 50 or more detections, respectively. To describe hourly vocalisation probabilities, we calculated: (1) proportion of recordings with detection of at least one individual in each 10-minute recording period ('p(presence)'); and (2) proportion of recordings with detection of at least two individuals in each recording period ('p(presence > 1)'). We calculated the same metrics (presence, presence of multiple individuals) aggregated by night, for description of nighly vocalization probability. For boxplots, voc.night.prop1proportions were calculated seprately for each site included, which allows visualization fo the variation between sites. We also provide plots that show the mean of proportions at all sites included, with binomial 95% confidence intervals. For description of nightly vocalization probability, separate plots were provided for all years combined, and for each year individually to visually assess whether patterns in vocalization probability varied between years.
+Acoustic Recording Units (ARUs) were located at sites to target breeding habitat of certain species. Some sites had no or very few detections of certain species. For description of vocalization probabilities by species, we included only those sites deemed to have high vocalization activity, defined as any site with a proportion of recordings with detection > 0.01, for a particular species. For Ancient Murrelets, Cassin's Auklets, Fork-Tailed Storm-Petrels, and Leach's Storm-Petrels: `r ddply(sitedet, .(species), summarise, length = length(species))$length[1]`, `r ddply(sitedet, .(species), summarise, length = length(species))$length[2]`, `r ddply(sitedet, .(species), summarise, length = length(species))$length[3]` and `r ddply(sitedet, .(species), summarise, length = length(species))$length[4]` sites had > 0.01 proportion of recordings with detection, respectively. To describe hourly vocalisation probabilities, we calculated: (1) proportion of recordings with detection of at least one individual in each 10-minute recording period ('p(presence)'); and (2) proportion of recordings with detection of at least two individuals in each recording period ('p(presence > 1)'). We calculated the same metrics (p(presence), p(presence>1)) aggregated by night, for description of seasonal vocalization probability. For visulaisation, the mean of all sites within each time period was calculated, along with standard error intervals. For boxplots, proportions were calculated for each week (Appendix A). For description of seasonal vocalization probability, separate plots were provided for all years combined, and for each year individually to visually assess whether patterns in vocalization probability varied between years. However, temporal coverage was limited in some years, which hindered comparisons.
 
 ## Results
 
@@ -64,19 +61,25 @@ Acoustic Recording Units (ARUs) were located at sites to target breeding habitat
 point(voc.night.m, 'hrmin', 'species', 'Time of Night', 'p(presence)', '1 hour', '%H:%M')
 ```
 
+```{r voc.night.m.pa}
+point_pa(voc.night.m, 'hrmin', 'species', 'Time of Night', '1 hour', '%H:%M')
+```
+
 `r figs("voc.night.cov.site")`
 
-```{r, voc.night.cov.site, fig.height = 2 "Number of sites in each 10-minute recording period.")}
+```{r, voc.night.cov.site, fig.height = 2}
 coverage(voc.night.cov, 'hrmin', 'sites', 'species', 'Time of Night', 'p(presence)', '1 hour', '%H:%M')
 ```
-##### 1 hour sliding window means
+
+`r figs("window3")`
+
 ```{r, window3}
-window3 <- ggplot(filter(voc.night.m, response == 'p(presence)'), aes(label = paste(hour(hrmin), lubridate::minute(hrmin), sep = ':'))) +
+ggplot(filter(voc.night.m, response == 'p(presence)'), aes(label = paste(hour(hrmin), lubridate::minute(hrmin), sep = ':'))) +
   geom_line(aes(x = hrmin, y = mean.3, color = species)) + 
   geom_point(aes(x = hrmin, y = max.3), color = 'black') + 
   geom_label(aes(x = hrmin, y = max.3), hjust = -0.2, vjust = 0.2, size = 3) +  
   labs(x = 'Time of Night', y = 'p(presence)', color = 'Species') +
-  scale_x_datetime(breaks = date_breaks('2 hours'), labels = date_format("%H:%M", tz = tz_data))  + theme_bw()
+  scale_x_datetime(breaks = date_breaks('2 hours'), labels = date_format("%H:%M", tz = tz_data))  + theme_bw() + theme_big
 ```
 
 ### Seasonal vocalization probabilities, all years combined
@@ -87,6 +90,10 @@ window3 <- ggplot(filter(voc.night.m, response == 'p(presence)'), aes(label = pa
 point(voc.allyear.m, 'ynight', 'species')
 ```
 
+```{r voc.allyear.m.pa}
+point_pa(voc.allyear.m, 'ynight', 'species')
+```
+
 `r figs("voc.allyear.cov.site")`
 
 ```{r, voc.allyear.cov.site, fig.height = 2, fig.width = 7}
@@ -94,137 +101,138 @@ coverage(voc.allyear.cov, 'ynight', 'sites', 'species')
 
 ```
 
-##### 14 day sliding window means
+`r figs("window14")`
+
 ```{r, window14}
-window14 <- ggplot(filter(voc.allyear.m, response == 'p(presence)'), aes(label = paste(month(ynight, label = TRUE), day(ynight), sep = '-'))) + 
+ggplot(filter(voc.allyear.m, response == 'p(presence)'), aes(label = paste(month(ynight, label = TRUE), day(ynight), sep = '-'))) + 
   geom_line(aes(x = ynight, y = mean.14, color = species)) +
   geom_point(aes(x = ynight, y = max.14), color = 'black') + 
   geom_label(aes(x = ynight, y = max.14), hjust = -0.2, vjust = 0.2, size = 3) + theme_bw() +
   labs(x = 'Date', y = 'p(presence)', color = 'Species') +
-  scale_x_datetime(breaks = date_breaks('1 month'), labels = date_format("%b")) 
+  scale_x_datetime(breaks = date_breaks('1 month'), labels = date_format("%b")) + theme_big
 ```
 
-##### Difference between responses
+`r figs("voc.allyear.diff")`
 
-`r figs("voc.allyear.m")`
-
-```{r voc.allyear.m}
+```{r voc.allyear.diff}
 ggplot(voc.allyear.diff) +
     geom_point( aes_string(x = 'ynight', y = 'meandiff'), size = 0.4)  + 
     geom_line(aes_string(x = 'ynight', y = 'meandiff'), size = 0.3) +
     facet_wrap(~species, ncol = 2, strip.position = 'top') + theme_bw() +
     scale_x_datetime(breaks = date_breaks('1 month'), labels = date_format('%b')) + 
-    labs(y = 'Response difference', x = 'Date')  
+    labs(y = 'p(presence) - p(presence>1)', x = 'Date')   + theme_big
 ```
 
 
-### Seasonal vocalization probabilities by year
+### Seasonal vocalization probabilities, by year
 #### Ancient Murrelet
 
 `r figs("voc.byyear.m.anmu")`
 
 ```{r voc.byyear.m.anmu}
-point(voc.byyear.anmu.m, 'ynight', 'year')
+point(filter(voc.byyear.m, species == sp[1]), 'ynight', 'year')
+```
+
+```{r voc.byyear.m.anmu.pa}
+point_pa(filter(voc.byyear.m, species == sp[1]), 'ynight', 'year')
 ```
 
 `r figs("voc.byyear.cov.anmu.site")`
 
 ```{r, voc.byyear.cov.anmu.site, fig.height = 3.5}
-coverage(voc.byyear.anmu.cov, 'ynight', 'sites', 'species')
+coverage(filter(voc.byyear.cov, species == sp[1]), 'ynight', 'sites', 'year', ncol = 3)
 ```
 
 #### Cassin's Auklet
+
 `r figs("voc.byyear.m.caau")`
 
 ```{r voc.byyear.m.caau}
-point(voc.byyear.caau.m, 'ynight', 'year')
+point(filter(voc.byyear.m, species == sp[2]), 'ynight', 'year')
+```
+
+```{r voc.byyear.m.caau.pa}
+point_pa(filter(voc.byyear.m, species == sp[2]), 'ynight', 'year')
 ```
 
 `r figs("voc.byyear.cov.caau.site")`
 
 ```{r, voc.byyear.cov.caau.site, fig.height = 3.5}
-coverage(voc.byyear.caau.cov, 'ynight', 'sites', 'species')
+coverage(filter(voc.byyear.cov, species == sp[2]), 'ynight', 'sites', 'year', ncol = 3)
 ```
 
 #### Fork-Tailed Storm-Petrel
+
 `r figs("voc.byyear.m.ftsp")`
 
 ```{r voc.byyear.m.ftsp}
-point(voc.byyear.ftsp.m, 'ynight', 'year')
+point(filter(voc.byyear.m, species == sp[3]), 'ynight', 'year')
+```
+
+```{r voc.byyear.m.ftsp.pa}
+point_pa(filter(voc.byyear.m, species == sp[3]), 'ynight', 'year')
 ```
 
 `r figs("voc.byyear.cov.ftsp.site")`
 
 ```{r, voc.byyear.cov.ftsp.site, fig.height = 3.5}
-coverage(voc.byyear.ftsp.cov, 'ynight', 'sites', 'species')
+coverage(filter(voc.byyear.cov, species == sp[3]), 'ynight', 'sites', 'year', ncol = 3)
 ```
 
-
 #### Leach's Storm-Petrel
+
 `r figs("voc.byyear.m.lesp")`
 
 ```{r voc.byyear.m.lesp}
-point(voc.byyear.lesp.m, 'ynight', 'year')
+point(filter(voc.byyear.m, species == sp[4]), 'ynight', 'year')
+```
+
+```{r voc.byyear.m.lesp.pa}
+point_pa(filter(voc.byyear.m, species == sp[4]), 'ynight', 'year')
 ```
 
 `r figs("voc.byyear.cov.lesp.site")`
 
 ```{r, voc.byyear.cov.lesp.site, fig.height = 3.5}
-coverage(voc.byyear.lesp.cov, 'ynight', 'sites', 'species')
+coverage(filter(voc.byyear.cov, species == sp[4] ), 'ynight', 'sites', 'year', ncol = 3)
 ```
 
-#### Seasonal Vocalisation - 14-day sliding window means
+<!-- ## Appendix A - Coverage by recordings -->
+<!-- `r figs("voc.night.cov.rec")` -->
 
-`r figs("voc.allyear.m14")`
+<!-- ```{r, voc.night.cov.rec, fig.height = 2} -->
+<!-- coverage(voc.night.cov, 'hrmin', 'recordings', 'species', 'Time of Night', 'p(presence)', '1 hour', '%H:%M') -->
+<!-- ``` -->
 
-```{r, voc.allyear.m14, fig.height = 3.5}
-window14
-```
+<!-- `r figs("voc.allyear.cov.rec")` -->
 
-#### Nightly Vocalisation - 1 hour sliding means
+<!-- ```{r, voc.allyear.cov.rec, fig.height = 2} -->
+<!-- coverage(voc.allyear.cov, 'ynight', 'recordings', 'species', 'Total recordings', 'p(presence)', '1 month', '%b') -->
+<!-- ``` -->
 
-`r figs("voc.night.m3")`
+<!-- `r figs("voc.byyear.cov.anmu.rec")` -->
 
-```{r, voc.night.m3, fig.height = 3.5}
-window3
-```
+<!-- ```{r, voc.byyear.cov.anmu.rec} -->
+<!-- coverage(voc.byyear.cov, 'ynight', 'sites', 'species', 'Date', 'Total sites', '1 month', '%b') -->
+<!-- ``` -->
 
-## Appendix A - Coverage by recordings
-`r figs("voc.night.cov.rec")`
+<!-- `r figs("voc.byyear.cov.caau.rec")` -->
 
-```{r, voc.night.cov.rec, fig.height = 2}
-coverage(voc.night.cov, 'hrmin', 'recordings', 'species', 'Time of Night', 'p(presence)', '1 hour', '%H:%M')
-```
+<!-- ```{r, voc.byyear.cov.caau.rec} -->
+<!-- coverage(voc.byyear.caau.cov, 'ynight', 'sites', 'species', 'Date', 'Total sites', '1 month', '%b') -->
+<!-- ``` -->
 
-`r figs("voc.allyear.cov.rec")`
+<!-- `r figs("voc.byyear.cov.ftsp.rec")` -->
 
-```{r, voc.allyear.cov.rec, fig.height = 2}
-coverage(voc.allyear.cov, 'ynight', 'recordings', 'species', 'Total recordings', 'p(presence)', '1 month', '%b')
-```
+<!-- ```{r, voc.byyear.cov.ftsp.rec} -->
+<!-- coverage(voc.byyear.ftsp.cov, 'ynight', 'sites', 'species', 'Date', 'Total sites', '1 month', '%b') -->
+<!-- ``` -->
 
-`r figs("voc.byyear.cov.anmu.rec")`
+<!-- `r figs("voc.byyear.cov.lesp.rec")` -->
 
-```{r, voc.byyear.cov.anmu.rec}
-coverage(voc.byyear.anmu.cov, 'ynight', 'sites', 'species', 'Date', 'Total sites', '1 month', '%b')
-```
-
-`r figs("voc.byyear.cov.caau.rec")`
-
-```{r, voc.byyear.cov.caau.rec}
-coverage(voc.byyear.caau.cov, 'ynight', 'sites', 'species', 'Date', 'Total sites', '1 month', '%b')
-```
-
-`r figs("voc.byyear.cov.ftsp.rec")`
-
-```{r, voc.byyear.cov.ftsp.rec}
-coverage(voc.byyear.ftsp.cov, 'ynight', 'sites', 'species', 'Date', 'Total sites', '1 month', '%b')
-```
-
-`r figs("voc.byyear.cov.lesp.rec")`
-
-```{r, voc.byyear.cov.lesp.rec}
-coverage(voc.byyear.lesp.cov, 'ynight', 'sites', 'species', 'Date', 'Total sites', '1 month', '%b')
-```
+<!-- ```{r, voc.byyear.cov.lesp.rec} -->
+<!-- coverage(voc.byyear.lesp.cov, 'ynight', 'sites', 'species', 'Date', 'Total sites', '1 month', '%b') -->
+<!-- ``` -->
 
 <!-- ```{r voc.night, fig.cap = fig$cap("voc.night", "Daily vocalization probabilities by species. Each boxplot summarizes proportion of recordings with detection of one or more individuals.")} -->
 <!-- boxplot.n(voc.night, 'hrmin', 'prop1', 'hrmin', 'species', 'p(presence)') -->

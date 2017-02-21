@@ -27,14 +27,14 @@ ftsp.ph1.2 <- lmer_fit(data = dplyr::filter(baci, species == sp[3] & phase1 == 1
 # summary - coefficients
 summary_coef = function(model) {
   coef <- as.data.frame(coef(summary(model)))
-  rownames(coef) <- c('Intercept', 'Period', 'Site Class', 'Period:SiteClass')
+  rownames(coef) <- c('Intercept', 'TimePeriod', 'Treatment', 'TimePeriod:Treatment')
   coef %<>% mutate(Term = rownames(coef), Estimate = round(Estimate, 3), SE = round(`Std. Error`, 3), 
                    df = round(df, 1), `p-value` = round(`Pr(>|t|)`, 3)) %>%
     select(Term, Estimate, SE, df, `p-value`) 
     
   return(coef)
 }
-summary_coef(ftsp.ph1.1)
+
 # summary - marginal means
 summary_marg = function(model, period) {
   marg.means <- as.data.frame(summary(lsmeans::lsmeans(model, specs = c('exp', period)))) %>%

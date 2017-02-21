@@ -1,11 +1,11 @@
 ---
-title: "Short-term impacts of island restoration on seabirds in Gwaii Haanas"
+title: "Short-term Impacts of Island Restoration on Seabirds in Gwaii Haanas: BACI"
 knit: (function(inputFile, encoding) { 
       out_dir <- 'reports';
       ext <- '.html';
       rmarkdown::render(inputFile,
                         encoding=encoding, 
-                        output_file=file.path(dirname(inputFile), out_dir,  paste('GH-acoustic-Report-', lubridate::date(Sys.time()), ext, sep = ''))) })
+                        output_file=file.path(dirname(inputFile), out_dir,  paste('GH-acoustic-Report-BACI-', lubridate::date(Sys.time()), ext, sep = ''))) })
 output:
   html_document
 
@@ -60,13 +60,13 @@ Key assumptions of the model:
 `r figs("anmu.temp.ph1")`
 
 ```{r anmu.temp.ph1)}
-tempcov_baci(data = filter(sea, phase1 == 1 & species == sp[1]), x = 'night', y = 'siteID', color = 'exp', date.start = y.window[1,2], date.end = y.window[1,3])
+tempcov_baci_win(data = filter(sea, phase1 == 1 & species == sp[1] & yday(ynight) >= yday(y.window[1,2]) & yday(ynight) <= yday(y.window[1,3])), x = 'ynight', y = 'siteID', color = 'exp', date.start = y.window[1,2], date.end = y.window[1,3])
 ```
   
 `r figs("anmu.temp.ph2")`
 
 ```{r anmu.temp.ph2)}
-tempcov_baci(data = filter(sea, phase2 == 1 & species == sp[1]), x = 'night', y = 'siteID', color = 'exp', date.start = y.window[1,2], date.end = y.window[1,3])
+tempcov_baci_win(data = filter(sea, phase2 == 1 & species == sp[1] & yday(ynight) >= yday(y.window[1,2]) & yday(ynight) <= yday(y.window[1,3])), x = 'ynight', y = 'siteID', color = 'exp', date.start = y.window[1,2], date.end = y.window[1,3])
 ```
   
 ### Mean proportions by island
@@ -157,13 +157,13 @@ kable(summary_cont(anmu.ph2.2, 'PeriodPh2'))
 `r figs("caau.temp.ph1")`
 
 ```{r caau.temp.ph1)}
-tempcov_baci(data = filter(sea, phase1 == 1 & species == sp[2]), x = 'night', y = 'siteID', color = 'exp', date.start = y.window[2,2], date.end = y.window[2,3])
+tempcov_baci_win(data = filter(sea, phase1 == 1 & species == sp[2] & yday(ynight) >= yday(y.window[2,2]) & yday(ynight) <= yday(y.window[2,3])), x = 'ynight', y = 'siteID', color = 'exp', date.start = y.window[2,2], date.end = y.window[2,3])
 ```
   
 `r figs("caau.temp.ph2")`
 
 ```{r caau.temp.ph2)}
-tempcov_baci(data = filter(sea, phase2 == 1 & species == sp[2]), x = 'night', y = 'siteID', color = 'exp', date.start = y.window[2,2], date.end = y.window[2,3])
+tempcov_baci_win(data = filter(sea, phase2 == 1 & species == sp[2] & yday(ynight) >= yday(y.window[2,2]) & yday(ynight) <= yday(y.window[2,3])), x = 'ynight', y = 'siteID', color = 'exp', date.start = y.window[2,2], date.end = y.window[2,3])
 ```
   
 ### Mean proportions by island
@@ -248,13 +248,13 @@ kable(summary_cont(caau.ph2.2, 'PeriodPh2'))
 `r figs("ftsp.temp.ph1")`
 
 ```{r ftsp.temp.ph1)}
-tempcov_baci(data = filter(sea, phase1 == 1 & species == sp[3]), x = 'night', y = 'siteID', color = 'exp', date.start = y.window[3,2], date.end = y.window[3,3])
+tempcov_baci_win(data = filter(sea, phase1 == 1 & species == sp[3] & yday(ynight) >= yday(y.window[1,2]) & yday(ynight) <= yday(y.window[1,3])), x = 'ynight', y = 'siteID', color = 'exp', date.start = y.window[3,2], date.end = y.window[3,3])
 ```
   
 `r figs("ftsp.temp.ph2")`
 
 ```{r ftsp.temp.ph2)}
-tempcov_baci(data = filter(sea, phase2 == 1 & species == sp[3]), x = 'night', y = 'siteID', color = 'exp', date.start = y.window[3,2], date.end = y.window[3,3])
+tempcov_baci_win(data = filter(sea, phase2 == 1 & species == sp[3] & yday(ynight) >= yday(y.window[1,2]) & yday(ynight) <= yday(y.window[1,3])), x = 'ynight', y = 'siteID', color = 'exp', date.start = y.window[3,2], date.end = y.window[3,3])
 ```
   
 ### Mean proportions by island

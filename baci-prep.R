@@ -1,10 +1,7 @@
 source('header.R')
+lapply(list.files(path = 'data', pattern = "*.Rda", full.names = TRUE), load, .GlobalEnv)
 
   ## create phase 2 time intervals to find max overlap
-  load('data/sea-clean.Rda')
-  load('data/voc-year-means.Rda')
-  load('data/voc-night-means.Rda')
-  
   seabaci <- select(sea, island, siteID, year, hrmin, night, rats, exp, species, pa, pa2, phase1, phase2)
   
   # night sampling window for each species
