@@ -15,19 +15,19 @@ figs("anmu.mean.ph1", "Phase 1, Ancient Murrelet; Mean logit(proportion) of reco
 figs("anmu.mean.ph2", "Phase 2, Ancient Murrelet; Mean logit(proportion) of recordings with detected presence (left panel) and more than one individual detected (right panel).")
 
 tbls("anmu.ph1.1.coef", "Summary model coefficients; Ancient Murrelet, Phase 1, proportion of recordings with detected presence. All values are logit-transformed unless otherwise stated." )
-tbls("anmu.ph1.1.marg", "BACI marginal means; Ancient Murrelet, Phase 1, proportion of recordings with detected presence. All values are logit-transformed unless otherwise stated.")
+tbls("anmu.ph1.1.marg", "BACI marginal means; Ancient Murrelet, Phase 1, proportion of recordings with detected presence. Confidence limits and SE were determined from logit-transformed means.")
 tbls("anmu.ph1.1.cont", "BACI effect and 95% confidence intervals; Ancient Murrelet, Phase 1, proportion of recordings with detected presence. All values are logit-transformed unless otherwise stated.")
 
 tbls("anmu.ph1.2.coef", "Summary model coefficients; Ancient Murrelet, Phase 1, proportion of recordings with more than one individual detected. All values are logit-transformed unless otherwise stated." )
-tbls("anmu.ph1.2.marg", "BACI marginal means; Ancient Murrelet, Phase 1, proportion of recordings with more than one individual detected. All values are logit-transformed unless otherwise stated.")
+tbls("anmu.ph1.2.marg", "BACI marginal means; Ancient Murrelet, Phase 1, proportion of recordings with more than one individual detected. Confidence limits and SE were determined from logit-transformed means.")
 tbls("anmu.ph1.2.cont", "BACI effect and 95% confidence intervals; Ancient Murrelet, Phase 1, proportion of recordings with more than one individual detected. All values are logit-transformed unless otherwise stated.")
 
 tbls("anmu.ph2.1.coef", "Summary model coefficients; Ancient Murrelet, Phase 2, proportion of recordings with detected presence. All values are logit-transformed unless otherwise stated." )
-tbls("anmu.ph2.1.marg", "BACI marginal means; Ancient Murrelet, Phase 2, proportion of recordings with detected presence. All values are logit-transformed unless otherwise stated.")
+tbls("anmu.ph2.1.marg", "BACI marginal means; Ancient Murrelet, Phase 2, proportion of recordings with detected presence. Confidence limits and SE were determined from logit-transformed means.")
 tbls("anmu.ph2.1.cont", "BACI effect and 95% confidence intervals; Ancient Murrelet, Phase 2, proportion of recordings with detected presence. All values are logit-transformed unless otherwise stated.")
 
 tbls("anmu.ph2.2.coef", "Summary model coefficients; Ancient Murrelet, Phase 2, proportion of recordings with more than one individual detected. All values are logit-transformed unless otherwise stated." )
-tbls("anmu.ph2.2.marg", "BACI marginal means; Ancient Murrelet, Phase 2, proportion of recordings with more than one individual detected. All values are logit-transformed unless otherwise stated.")
+tbls("anmu.ph2.2.marg", "BACI marginal means; Ancient Murrelet, Phase 2, proportion of recordings with more than one individual detected. Confidence limits and SE were determined from logit-transformed means.")
 tbls("anmu.ph2.2.cont", "BACI effect and 95% confidence intervals; Ancient Murrelet, Phase 2, proportion of recordings with more than one individual detected. All values are logit-transformed unless otherwise stated.")
 
 # CAAU
@@ -42,19 +42,19 @@ figs("caau.mean.ph1", "Phase 1, Cassin's Auklet; Mean logit(proportion) of recor
 figs("caau.mean.ph2", "Phase 2, Cassin's Auklet; Mean logit(proportion) of recordings with detected presence (left panel) and more than one individual detected (right panel).")
 
 tbls("caau.ph1.1.coef", "Summary model coefficients; Cassin's Auklet, Phase 1, proportion of recordings with detected presence. All values are logit-transformed unless otherwise stated." )
-tbls("caau.ph1.1.marg", "BACI marginal means; Cassin's Auklet, Phase 1, proportion of recordings with detected presence. All values are logit-transformed unless otherwise stated.")
+tbls("caau.ph1.1.marg", "BACI marginal means; Cassin's Auklet, Phase 1, proportion of recordings with detected presence. Confidence limits and SE were determined from logit-transformed means.")
 tbls("caau.ph1.1.cont", "BACI effect and 95% confidence intervals; Cassin's Auklet, Phase 1, proportion of recordings with detected presence. All values are logit-transformed unless otherwise stated.")
 
 tbls("caau.ph1.2.coef", "Summary model coefficients; Cassin's Auklet, Phase 1, proportion of recordings with more than one individual detected. All values are logit-transformed unless otherwise stated." )
-tbls("caau.ph1.2.marg", "BACI marginal means; Cassin's Auklet, Phase 1, proportion of recordings with more than one individual detected. All values are logit-transformed unless otherwise stated.")
+tbls("caau.ph1.2.marg", "BACI marginal means; Cassin's Auklet, Phase 1, proportion of recordings with more than one individual detected. Confidence limits and SE were determined from logit-transformed means.")
 tbls("caau.ph1.2.cont", "BACI effect and 95% confidence intervals; Cassin's Auklet, Phase 1, proportion of recordings with more than one individual detected. All values are logit-transformed unless otherwise stated.")
 
 tbls("caau.ph2.1.coef", "Summary model coefficients; Cassin's Auklet, Phase 2, proportion of recordings with detected presence. All values are logit-transformed unless otherwise stated." )
-tbls("caau.ph2.1.marg", "BACI marginal means; Cassin's Auklet, Phase 2, proportion of recordings with detected presence. All values are logit-transformed unless otherwise stated.")
+tbls("caau.ph2.1.marg", "BACI marginal means; Cassin's Auklet, Phase 2, proportion of recordings with detected presence. Confidence limits and SE were determined from logit-transformed means.")
 tbls("caau.ph2.1.cont", "BACI effect and 95% confidence intervals; Cassin's Auklet, Phase 2, proportion of recordings with detected presence. All values are logit-transformed unless otherwise stated.")
 
 tbls("caau.ph2.2.coef", "Summary model coefficients; Cassin's Auklet, Phase 2, proportion of recordings with more than one individual detected. All values are logit-transformed unless otherwise stated." )
-tbls("caau.ph2.2.marg", "BACI marginal means; Cassin's Auklet, Phase 2, proportion of recordings with more than one individual detected. All values are logit-transformed unless otherwise stated.")
+tbls("caau.ph2.2.marg", "BACI marginal means; Cassin's Auklet, Phase 2, proportion of recordings with more than one individual detected. Confidence limits and SE were determined from logit-transformed means.")
 tbls("caau.ph2.2.cont", "BACI effect and 95% confidence intervals; Cassin's Auklet, Phase 2, proportion of recordings with more than one individual detected. All values are logit-transformed unless otherwise stated.")
 
 # FTSP
@@ -68,18 +68,18 @@ figs("ftsp.mean.ph1", "Phase 1, Fork-Tailed Storm-Petrel; Mean logit(proportion)
 figs("ftsp.mean.ph2", "Phase 2, Fork-Tailed Storm-Petrel; Mean logit(proportion) of recordings with detected presence (left panel) and more than one individual detected (right panel).")
 
 tbls("ftsp.ph1.1.coef", "Summary model coefficients; Fork-Tailed Storm-Petrel, Phase 1, proportion of recordings with detected presence. All values are logit-transformed unless otherwise stated." )
-tbls("ftsp.ph1.1.marg", "BACI marginal means; Fork-Tailed Storm-Petrel, Phase 1, proportion of recordings with detected presence. All values are logit-transformed unless otherwise stated.")
+tbls("ftsp.ph1.1.marg", "BACI marginal means; Fork-Tailed Storm-Petrel, Phase 1, proportion of recordings with detected presence. Confidence limits and SE were determined from logit-transformed means.")
 tbls("ftsp.ph1.1.cont", "BACI effect and 95% confidence intervals; Fork-Tailed Storm-Petrel, Phase 1, proportion of recordings with detected presence. All values are logit-transformed unless otherwise stated.")
 
 tbls("ftsp.ph1.2.coef", "Summary model coefficients; Fork-Tailed Storm-Petrel, Phase 1, proportion of recordings with more than one individual detected. All values are logit-transformed unless otherwise stated." )
-tbls("ftsp.ph1.2.marg", "BACI marginal means; Fork-Tailed Storm-Petrel, Phase 1, proportion of recordings with more than one individual detected. All values are logit-transformed unless otherwise stated.")
+tbls("ftsp.ph1.2.marg", "BACI marginal means; Fork-Tailed Storm-Petrel, Phase 1, proportion of recordings with more than one individual detected. Confidence limits and SE were determined from logit-transformed means.")
 tbls("ftsp.ph1.2.cont", "BACI effect and 95% confidence intervals; Fork-Tailed Storm-Petrel, Phase 1, proportion of recordings with more than one individual detected. All values are logit-transformed unless otherwise stated.")
 
 tbls("ftsp.ph2.1.coef", "Summary model coefficients; Fork-Tailed Storm-Petrel, Phase 2, proportion of recordings with detected presence. All values are logit-transformed unless otherwise stated." )
-tbls("ftsp.ph2.1.marg", "BACI marginal means; Fork-Tailed Storm-Petrel, Phase 2, proportion of recordings with detected presence. All values are logit-transformed unless otherwise stated.")
+tbls("ftsp.ph2.1.marg", "BACI marginal means; Fork-Tailed Storm-Petrel, Phase 2, proportion of recordings with detected presence. Confidence limits and SE were determined from logit-transformed means.")
 tbls("ftsp.ph2.1.cont", "BACI effect and 95% confidence intervals; Fork-Tailed Storm-Petrel, Phase 2, proportion of recordings with detected presence. All values are logit-transformed unless otherwise stated.")
 
 tbls("ftsp.ph2.2.coef", "Summary model coefficients; Fork-Tailed Storm-Petrel, Phase 2, proportion of recordings with more than one individual detected. All values are logit-transformed unless otherwise stated." )
-tbls("ftsp.ph2.2.marg", "BACI marginal means; Fork-Tailed Storm-Petrel, Phase 2, proportion of recordings with more than one individual detected. All values are logit-transformed unless otherwise stated.")
+tbls("ftsp.ph2.2.marg", "BACI marginal means; Fork-Tailed Storm-Petrel, Phase 2, proportion of recordings with more than one individual detected. Confidence limits and SE were determined from logit-transformed means.")
 tbls("ftsp.ph2.2.cont", "BACI effect and 95% confidence intervals; Fork-Tailed Storm-Petrel, Phase 2, proportion of recordings with more than one individual detected. All values are logit-transformed unless otherwise stated.")
 
