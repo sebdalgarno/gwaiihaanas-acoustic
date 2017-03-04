@@ -1,5 +1,5 @@
 ---
-title: "Short-term Impacts of Island Restoration on Seabirds in Gwaii Haanas: BACI"
+title: "Short-term Impacts of Island Restoration on Seabirds in Gwaii Haanas"
 knit: (function(inputFile, encoding) { 
       out_dir <- 'reports';
       ext <- '.html';
@@ -290,7 +290,8 @@ knitr::kable(summary_marg(ftsp.ph2.2, 'PeriodPh2'))
 ```
 
 
-# Appendix A - Model summary coefficients (note that estimate for interaction term and p-value are identical to BACI contrast table.)
+# Appendix A - Model summary coefficients
+#### Note that estimate for interaction term and p-value are identical to BACI contrast table.
 `r tbls("anmu.ph1.1.coef")`
 
 ```{r anmu.ph1.1.coef, results = "asis"}
