@@ -69,7 +69,7 @@ tempcov_baci_win(data = filter(sea, phase1 == 1 & species == sp[1] & yday(ynight
 tempcov_baci_win(data = filter(sea, phase2 == 1 & species == sp[1] & yday(ynight) >= yday(y.window[1,2]) & yday(ynight) <= yday(y.window[1,3])), x = 'ynight', y = 'siteID', color = 'exp', date.start = y.window[1,2], date.end = y.window[1,3])
 ```
   
-### Mean proportions by island
+### Mean logit(proportion) by island
 `r figs("anmu.mean.ph1")`
 
 ```{r, anmu.mean.ph1)}
@@ -149,7 +149,7 @@ tempcov_baci_win(data = filter(sea, phase1 == 1 & species == sp[2] & yday(ynight
 tempcov_baci_win(data = filter(sea, phase2 == 1 & species == sp[2] & yday(ynight) >= yday(y.window[2,2]) & yday(ynight) <= yday(y.window[2,3])), x = 'ynight', y = 'siteID', color = 'exp', date.start = y.window[2,2], date.end = y.window[2,3])
 ```
   
-### Mean proportions by island
+### Mean logit(proportion) by island
 `r figs("caau.mean.ph1")`
 
 ```{r, caau.mean.ph1)}
@@ -226,7 +226,7 @@ tempcov_baci_win(data = filter(sea, phase1 == 1 & species == sp[3] & yday(ynight
 tempcov_baci_win(data = filter(sea, phase2 == 1 & species == sp[3] & yday(ynight) >= yday(y.window[1,2]) & yday(ynight) <= yday(y.window[1,3])), x = 'ynight', y = 'siteID', color = 'exp', date.start = y.window[3,2], date.end = y.window[3,3])
 ```
   
-### Mean proportions by island
+### Mean logit(proportion) by island
 `r figs("ftsp.mean.ph1")`
 
 ```{r, ftsp.mean.ph1)}
