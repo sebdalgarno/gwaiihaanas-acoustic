@@ -28,7 +28,7 @@ tempcov_baci_win = function(data, x, y, color, date.start, date.end) {
 island_props = function(data, vline) {
   ggplot(data, aes(x = year, y = mean.prop,  color = exp, shape = island)) +
     facet_wrap(~propType) + geom_point(size = 2.4, position = position_dodge(width = 0.1)) + geom_line() +
-    theme_bw() + geom_vline(xintercept = vline) + labs(x = 'Year', y = 'Logit (mean proportion)', color = 'Treatment', shape = 'Island') + 
+    theme_bw() + geom_vline(xintercept = vline) + labs(x = 'Year', y = 'Mean logit(proportion)', color = 'Treatment', shape = 'Island') + 
     theme_big
 }
 
