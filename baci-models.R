@@ -35,13 +35,15 @@ summary_coef = function(model) {
   return(coef)
 }
 
+summary_coef(anmu.ph2.1)
+
 # summary - marginal means
 summary_marg = function(model, period) {
   marg.means <- as.data.frame(summary(lsmeans::lsmeans(model, specs = c('exp', period)))) %>%
     select_('Site Class' = 'exp', 'Period' = period,
             'Marginal Mean' = 'lsmean', 'SE', 'df',
            'Lower CL' =' lower.CL', 'Upper CL' = 'upper.CL') %>%
-    mutate(`Marginal Mean` = round(`Marginal Mean`, 3), SE = round(SE, 3), df = round(df, 1),
+    mutate(`Mean Logit(proportion)` = round(`Marginal Mean`, 3), SE = round(SE, 3), df = round(df, 1),
            'Lower CL' = round(`Lower CL`, 3), 'Upper CL' = round(`Upper CL`, 3))
 }
 
@@ -49,8 +51,8 @@ summary_marg = function(model, period) {
 # summary - contrast + confint
 summary_cont = function(model, period) {
   marg <- lsmeans::lsmeans(model, specs = c('exp', period))
-  contr <- contrast(marg, list(baci = c(-1, 1, 1, -1)))
-  confint <- confint(contrast(marg, list(baci = c(-1, 1, 1, -1))))
+  contr <- contrast(marg, list(baci = c(1, -1, -1, 1)))
+  confint <- confint(contrast(marg, list(baci = c(1, -1, -1, 1))))
   df <- data.frame(Estimate = round(confint$estimate, 3), SE = round(confint$SE, 3), 
                         lowercl = round(confint$lower.CL, 3), uppercl = round(confint$upper.CL, 3),
                         df = round(confint$df, 1), pvalue = round(summary(contr)[1,6], 3)) %>%
