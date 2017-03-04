@@ -53,10 +53,10 @@ summary_cont = function(model, period) {
   marg <- lsmeans::lsmeans(model, specs = c('exp', period))
   contr <- contrast(marg, list(baci = c(1, -1, -1, 1)))
   confint <- confint(contrast(marg, list(baci = c(1, -1, -1, 1))))
-  df <- data.frame(Estimate = round(confint$estimate, 3), SE = round(confint$SE, 3), 
-                        lowercl = round(confint$lower.CL, 3), uppercl = round(confint$upper.CL, 3),
+  df <- data.frame(Estimate = round(confint$estimate, 3), expEst = round(exp(confint$estimate), 3),
+                   SE = round(confint$SE, 3), lowercl = round(confint$lower.CL, 3), uppercl = round(confint$upper.CL, 3),
                         df = round(confint$df, 1), pvalue = round(summary(contr)[1,6], 3)) %>%
-    mutate(`Lower CL` = lowercl, `Upper CL` = uppercl, `p-value` = pvalue, lowercl = NULL, uppercl = NULL, pvalue = NULL)
+    select(Estimate, `exp(Estimate)` = expEst, SE, `Lower CL` = lowercl, `Upper CL` = uppercl, `p-value` = pvalue)
 }
 
 # variance
