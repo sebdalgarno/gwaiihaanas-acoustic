@@ -40,11 +40,13 @@ summary_coef(anmu.ph2.1)
 # summary - marginal means
 summary_marg = function(model, period) {
   marg.means <- as.data.frame(summary(lsmeans::lsmeans(model, specs = c('exp', period)))) %>%
-    select_('Site Class' = 'exp', 'Period' = period,
+    select_('Treatment' = 'exp', 'Time Period' = period,
             'Marginal Mean' = 'lsmean', 'SE', 'df',
-           'Lower CL' =' lower.CL', 'Upper CL' = 'upper.CL') %>%
-    mutate(`Mean Logit(proportion)` = round(`Marginal Mean`, 3), SE = round(SE, 3), df = round(df, 1),
-           'Lower CL' = round(`Lower CL`, 3), 'Upper CL' = round(`Upper CL`, 3))
+           'Lower CL' = 'lower.CL', 'Upper CL' = 'upper.CL') %>%
+    mutate(`Logit(proportion)` = round(`Marginal Mean`, 3), `Proportion` = round(antilogit(`Marginal Mean`), 3),  SE = round(SE, 3), df = round(df, 1),
+           'Lower CL' = round(`Lower CL`, 3), 'Upper CL' = round(`Upper CL`, 3)) %>%
+    
+    select(Treatment, `Time Period`, `Logit(proportion)`, `Proportion`, SE, df, `Lower CL`, `Upper CL`)
 }
 
 
