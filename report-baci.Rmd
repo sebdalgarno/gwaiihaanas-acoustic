@@ -40,7 +40,7 @@ Variation occurred in sampling duration (i.e. start and end time) of ARUs: acros
 ##### Statistical model
 Prior to analysis, each response was logit-transformed (empirical logit transformation) to account for proportions being bounded at 0 and 1. Coefficients, marginal means and BACI contrast and confidence limits were back-transformed after model fitting for presentation in tables. For each species:phase:response combination, we fit a linear mixed-effects model within R, using the lmer() function within the lme4 package. Due to the unbalanced experimental design (e.g. not all monitoring locations consistently monitored in every year), the response was calculated at each monitoring location rather than each island group; this allowed for testing random effects of site, nested within island. For all models, fixed effects included period (Before/After), siteclass (Control/Impact), and period:siteclass interaction; random effects included year, island and site (nested within island). 
 
-We used ANOVA (type 3 with Kenward-Roger approximation for degrees of freedom) to determine statistical significance of fixed effects. The interaction term (period:siteclass) is the 'BACI effect' and indicates a difference in before-after response for control and impact groups. For all coefficients, a p-value < 0.05 indicated statistical significance. We also determined the magnitude of the BACI effect (contrast) by calculating the difference of the differences in marginal means (uCA = uCB - uIA + uIB) along with 95% confidence limits; these analyses were done using the lsmeans package. The contrast can be interpreted as percent increase in the response in the impact area relative the the control area; confidence limits not including 0 indicate an effect.
+We used ANOVA (type 3 with Kenward-Roger approximation for degrees of freedom) to determine statistical significance of fixed effects. The interaction term (period:siteclass) is the 'BACI effect' and indicates a difference in before-after response for control and impact groups. For all coefficients, a p-value < 0.05 indicated statistical significance. We also determined the magnitude of the BACI effect (contrast) by calculating the difference of the differences in marginal means (uCA - uCB - uIA + uIB) along with 95% confidence limits; these analyses were done using the lsmeans package. The contrast can be interpreted as percent increase in the response in the impact area relative the the control area; confidence limits not including 0 indicate an effect.
 
 Key assumptions of the model:    
 
@@ -84,31 +84,25 @@ island_props(data = filter(baci.island, species == sp[1] & phase2 == 1 & island 
 
 ### Statistical model results
 #### Phase 1, p(presence)
-`r tbls("anmu.ph1.1.coef")`
+  
+`r tbls("anmu.ph1.1.cont")`
 
-```{r anmu.ph1.1.coef, results = "asis"}
-kable(summary_coef(anmu.ph1.1))
+```{r anmu.ph1.1.cont, results = "asis"} 
+kable(summary_cont(anmu.ph1.1, 'PeriodPh1'))
 ```
-
 
 `r tbls("anmu.ph1.1.marg")`
 
 ```{r anmu.ph1.1.marg, results = "asis"} 
 knitr::kable(summary_marg(anmu.ph1.1, 'PeriodPh1'))
 ```
-  
 
-`r tbls("anmu.ph1.1.cont")`
-
-```{r anmu.ph1.1.cont, results = "asis"} 
-kable(summary_cont(anmu.ph1.1, 'PeriodPh1'))
-```
- 
  
 #### Phase 1, p(presence>1)
-`r tbls("anmu.ph1.2.coef")`
-```{r anmu.ph1.2.coef, results = "asis"}
-kable(summary_coef(anmu.ph1.2))
+
+`r tbls("anmu.ph1.2.cont")`
+```{r anmu.ph1.2.cont, results = "asis"} 
+kable(summary_cont(anmu.ph1.2, 'PeriodPh1'))
 ```
 
 `r tbls("anmu.ph1.2.marg")`
@@ -116,15 +110,12 @@ kable(summary_coef(anmu.ph1.2))
 knitr::kable(summary_marg(anmu.ph1.2, 'PeriodPh1'))
 ```
 
-`r tbls("anmu.ph1.2.cont")`
-```{r anmu.ph1.2.cont, results = "asis"} 
-kable(summary_cont(anmu.ph1.2, 'PeriodPh1'))
-```
 
 #### Phase 2, p(presence)
-`r tbls("anmu.ph2.1.coef")`
-```{r anmu.ph2.1.coef, results = "asis"}
-kable(summary_coef(anmu.ph2.1))
+
+`r tbls("anmu.ph2.1.cont")`
+```{r anmu.ph2.1.cont, results = "asis"} 
+kable(summary_cont(anmu.ph2.1, 'PeriodPh2'))
 ```
 
 `r tbls("anmu.ph2.1.marg")`
@@ -132,25 +123,17 @@ kable(summary_coef(anmu.ph2.1))
 knitr::kable(summary_marg(anmu.ph2.1, 'PeriodPh2'))
 ```
 
-`r tbls("anmu.ph2.1.cont")`
-```{r anmu.ph2.1.cont, results = "asis"} 
-kable(summary_cont(anmu.ph2.1, 'PeriodPh2'))
-```
 
 #### Phase 2, p(presence>1)
-`r tbls("anmu.ph2.2.coef")`
-```{r anmu.ph2.2.coef, results = "asis"}
-kable(summary_coef(anmu.ph2.2))
+
+`r tbls("anmu.ph2.2.cont")`
+```{r anmu.ph2.2.cont, results = "asis"} 
+kable(summary_cont(anmu.ph2.2, 'PeriodPh2'))
 ```
 
 `r tbls("anmu.ph2.2.marg")`
 ```{r anmu.ph2.2.marg, results = "asis"} 
 knitr::kable(summary_marg(anmu.ph2.2, 'PeriodPh2'))
-```
-
-`r tbls("anmu.ph2.2.cont")`
-```{r anmu.ph2.2.cont, results = "asis"} 
-kable(summary_cont(anmu.ph2.2, 'PeriodPh2'))
 ```
 
 ## Cassin's Auklet
@@ -181,25 +164,22 @@ island_props(data = filter(baci.island, species == sp[2] & phase2 == 1), vline =
 
 ### Statistical model results
 #### Phase 1, p(presence)
-`r tbls("caau.ph1.1.coef")`
-```{r caau.ph1.1.coef, results = "asis"}
-kable(summary_coef(caau.ph1.1))
-```
-
-`r tbls("caau.ph1.1.marg")`
-```{r caau.ph1.1.marg, results = "asis"} 
-knitr::kable(summary_marg(caau.ph1.1, 'PeriodPh1'))
-```
-  
+ 
 `r tbls("caau.ph1.1.cont")`
 ```{r caau.ph1.1.cont, results = "asis"} 
 kable(summary_cont(caau.ph1.1, 'PeriodPh1'))
 ```
  
+`r tbls("caau.ph1.1.marg")`
+```{r caau.ph1.1.marg, results = "asis"} 
+knitr::kable(summary_marg(caau.ph1.1, 'PeriodPh1'))
+```
+ 
 #### Phase 1, p(presence>1)
-`r tbls("caau.ph1.2.coef")`
-```{r caau.ph1.2.coef, results = "asis"}
-kable(summary_coef(caau.ph1.2))
+
+`r tbls("caau.ph1.2.cont")`
+```{r caau.ph1.2.cont, results = "asis"} 
+kable(summary_cont(caau.ph1.2, 'PeriodPh1'))
 ```
 
 `r tbls("caau.ph1.2.marg")`
@@ -207,15 +187,12 @@ kable(summary_coef(caau.ph1.2))
 knitr::kable(summary_marg(caau.ph1.2, 'PeriodPh1'))
 ```
 
-`r tbls("caau.ph1.2.cont")`
-```{r caau.ph1.2.cont, results = "asis"} 
-kable(summary_cont(caau.ph1.2, 'PeriodPh1'))
-```
 
 #### Phase 2, p(presence)
-`r tbls("caau.ph2.1.coef")`
-```{r caau.ph2.1.coef, results = "asis"}
-kable(summary_coef(caau.ph2.1))
+
+`r tbls("caau.ph2.1.cont")`
+```{r caau.ph2.1.cont, results = "asis"} 
+kable(summary_cont(caau.ph2.1, 'PeriodPh2'))
 ```
 
 `r tbls("caau.ph2.1.marg")`
@@ -223,25 +200,17 @@ kable(summary_coef(caau.ph2.1))
 knitr::kable(summary_marg(caau.ph2.1, 'PeriodPh2'))
 ```
 
-`r tbls("caau.ph2.1.cont")`
-```{r caau.ph2.1.cont, results = "asis"} 
-kable(summary_cont(caau.ph2.1, 'PeriodPh2'))
-```
 
 #### Phase 2, p(presence>1)
-`r tbls("caau.ph2.2.coef")`
-```{r caau.ph2.2.coef, results = "asis"}
-kable(summary_coef(caau.ph2.2))
+
+`r tbls("caau.ph2.2.cont")`
+```{r caau.ph2.2.cont, results = "asis"} 
+kable(summary_cont(caau.ph2.2, 'PeriodPh2'))
 ```
 
 `r tbls("caau.ph2.2.marg")`
 ```{r caau.ph2.2.marg, results = "asis"} 
 knitr::kable(summary_marg(caau.ph2.2, 'PeriodPh2'))
-```
-
-`r tbls("caau.ph2.2.cont")`
-```{r caau.ph2.2.cont, results = "asis"} 
-kable(summary_cont(caau.ph2.2, 'PeriodPh2'))
 ```
 
 ## Fork-Tailed Storm Petrel
@@ -272,25 +241,22 @@ island_props(data = filter(baci.island, species == sp[3] & phase2 == 1), vline =
 
 ### Statistical model results
 #### Phase 1, p(presence)
-`r tbls("ftsp.ph1.1.coef")`
-```{r ftsp.ph1.1.coef, results = "asis"}
-kable(summary_coef(ftsp.ph1.1))
-```
-
-`r tbls("ftsp.ph1.1.marg")`
-```{r ftsp.ph1.1.marg, results = "asis"} 
-knitr::kable(summary_marg(ftsp.ph1.1, 'PeriodPh1'))
-```
-  
+ 
 `r tbls("ftsp.ph1.1.cont")`
 ```{r ftsp.ph1.1.cont, results = "asis"} 
 kable(summary_cont(ftsp.ph1.1, 'PeriodPh1'))
 ```
  
+`r tbls("ftsp.ph1.1.marg")`
+```{r ftsp.ph1.1.marg, results = "asis"} 
+knitr::kable(summary_marg(ftsp.ph1.1, 'PeriodPh1'))
+```
+ 
 #### Phase 1, p(presence>1)
-`r tbls("ftsp.ph1.2.coef")`
-```{r ftsp.ph1.2.coef, results = "asis"}
-kable(summary_coef(ftsp.ph1.2))
+
+`r tbls("ftsp.ph1.2.cont")`
+```{r ftsp.ph1.2.cont, results = "asis"} 
+kable(summary_cont(ftsp.ph1.2, 'PeriodPh1'))
 ```
 
 `r tbls("ftsp.ph1.2.marg")`
@@ -298,15 +264,12 @@ kable(summary_coef(ftsp.ph1.2))
 knitr::kable(summary_marg(ftsp.ph1.2, 'PeriodPh1'))
 ```
 
-`r tbls("ftsp.ph1.2.cont")`
-```{r ftsp.ph1.2.cont, results = "asis"} 
-kable(summary_cont(ftsp.ph1.2, 'PeriodPh1'))
-```
 
 #### Phase 2, p(presence)
-`r tbls("ftsp.ph2.1.coef")`
-```{r ftsp.ph2.1.coef, results = "asis"}
-kable(summary_coef(ftsp.ph2.1))
+
+`r tbls("ftsp.ph2.1.cont")`
+```{r ftsp.ph2.1.cont, results = "asis"} 
+kable(summary_cont(ftsp.ph2.1, 'PeriodPh2'))
 ```
 
 `r tbls("ftsp.ph2.1.marg")`
@@ -314,15 +277,11 @@ kable(summary_coef(ftsp.ph2.1))
 knitr::kable(summary_marg(ftsp.ph2.1, 'PeriodPh2'))
 ```
 
-`r tbls("ftsp.ph2.1.cont")`
-```{r ftsp.ph2.1.cont, results = "asis"} 
-kable(summary_cont(ftsp.ph2.1, 'PeriodPh2'))
-```
-
 #### Phase 2, p(presence>1)
-`r tbls("ftsp.ph2.2.coef")`
-```{r ftsp.ph2.2.coef, results = "asis"}
-kable(summary_coef(ftsp.ph2.2))
+
+`r tbls("ftsp.ph2.2.cont")`
+```{r ftsp.ph2.2.cont, results = "asis"} 
+kable(summary_cont(ftsp.ph2.2, 'PeriodPh2'))
 ```
 
 `r tbls("ftsp.ph2.2.marg")`
@@ -330,14 +289,65 @@ kable(summary_coef(ftsp.ph2.2))
 knitr::kable(summary_marg(ftsp.ph2.2, 'PeriodPh2'))
 ```
 
-`r tbls("ftsp.ph2.2.cont")`
-```{r ftsp.ph2.2.cont, results = "asis"} 
-kable(summary_cont(ftsp.ph2.2, 'PeriodPh2'))
+
+# Appendix A - Model summary coefficients (note that estimate for interaction term and p-value are identical to BACI contrast table.)
+`r tbls("anmu.ph1.1.coef")`
+
+```{r anmu.ph1.1.coef, results = "asis"}
+kable(summary_coef(anmu.ph1.1))
 ```
 
+`r tbls("anmu.ph1.2.coef")`
+```{r anmu.ph1.2.coef, results = "asis"}
+kable(summary_coef(anmu.ph1.2))
+```
 
+`r tbls("anmu.ph2.1.coef")`
+```{r anmu.ph2.1.coef, results = "asis"}
+kable(summary_coef(anmu.ph2.1))
+```
 
+`r tbls("anmu.ph2.2.coef")`
+```{r anmu.ph2.2.coef, results = "asis"}
+kable(summary_coef(anmu.ph2.2))
+```
 
+`r tbls("caau.ph1.1.coef")`
+```{r caau.ph1.1.coef, results = "asis"}
+kable(summary_coef(caau.ph1.1))
+```
 
+`r tbls("caau.ph1.2.coef")`
+```{r caau.ph1.2.coef, results = "asis"}
+kable(summary_coef(caau.ph1.2))
+```
 
+`r tbls("caau.ph2.1.coef")`
+```{r caau.ph2.1.coef, results = "asis"}
+kable(summary_coef(caau.ph2.1))
+```
 
+`r tbls("caau.ph2.2.coef")`
+```{r caau.ph2.2.coef, results = "asis"}
+kable(summary_coef(caau.ph2.2))
+```
+
+`r tbls("ftsp.ph1.1.coef")`
+```{r ftsp.ph1.1.coef, results = "asis"}
+kable(summary_coef(ftsp.ph1.1))
+```
+
+`r tbls("ftsp.ph1.2.coef")`
+```{r ftsp.ph1.2.coef, results = "asis"}
+kable(summary_coef(ftsp.ph1.2))
+```
+
+`r tbls("ftsp.ph2.1.coef")`
+```{r ftsp.ph2.1.coef, results = "asis"}
+kable(summary_coef(ftsp.ph2.1))
+```
+
+`r tbls("ftsp.ph2.2.coef")`
+```{r ftsp.ph2.2.coef, results = "asis"}
+kable(summary_coef(ftsp.ph2.2))
+```
