@@ -35,13 +35,13 @@ lapply(list.files(path = 'data', pattern = "*.Rda", full.names = TRUE), load, .G
   
   # ensure factors and ordered factors
   seabaci %<>% mutate(island = factor(island),
-                     site = factor(siteID),
-                     yearf = ordered(year, levels = c(2010, 2011, 2012, 2013, 2014, 2015)),
-                     rats = ordered(rats, levels = c('Absent', 'Reduced', 'Present')),
-                     exp = ordered(exp, levels = c('Control', 'Impact')),
-                     PeriodPh1 = ordered(PeriodPh1, levels = c('Before', 'After')),
-                     PeriodPh2 = ordered(PeriodPh2, levels = c('Before', 'After')),
-                     ynight = floor_date(night, 'day')
+                      site = factor(siteID),
+                      yearf = ordered(year, levels = c(2010, 2011, 2012, 2013, 2014, 2015)),
+                      rats = factor(rats),
+                      exp = factor(exp),
+                      PeriodPh1 = factor(PeriodPh1),
+                      PeriodPh2 = factor(PeriodPh2),
+                      ynight = floor_date(night, 'day')
   )
   
   ### summarize proportions by site
