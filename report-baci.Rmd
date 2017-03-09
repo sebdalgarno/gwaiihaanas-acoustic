@@ -28,19 +28,17 @@ source('baci-captions.R')
 
 Task 2e) `r task2e`
 
-##### Experimental Design
-This study included multiple control and impact sites, across multiple years before and after impact (i.e. rat eradication). ARU monitoring locations ('sites') were located within island groups ('islands'), which were classified as 'control' or 'impact'. The number of sites within islands ranged from 1 to 8. Two response variables were considered: (1) the proportion of recordings with detection of at least one individual across a common within-season time-period (p(presence)); (2) the proportion of recordings with detection of more than one individual (i.e. overlapping calls) across a common within-season time-period (p(presence > 1). Separate BACI analyses were carried out for each species (`r sp[1]`, `r sp[2]`, `r sp[3]`), eradication phase (Phase 1, Phase 2) and response (p(presence), p(presence > 1)).
+#### Experimental Design
+This study included multiple control and impact sites, across multiple years before and after treatment (i.e. rat eradication) over two separate eradication phases ('phase 1' and 'phase 2'). ARU monitoring locations ('sites') were located within island groups ('islands'). Islands were classified as 'control' or 'impact' depending on whether rat eradication occurred. Two response variables were considered: (1) the proportion of recordings with detection of at least one individual across a common within-season time-period (p(presence)); (2) the proportion of recordings with detection of more than one individual (i.e. overlapping calls) across a common within-season time-period (p(presence > 1). Separate BACI analyses were carried out for each species (`r sp[1]`, `r sp[2]`, `r sp[3]`), eradication phase (Phase 1, Phase 2) and response (p(presence), p(presence > 1)).
 
-In phase 1, rat eradication occurred by bait station post-breeding season, 2011. There were two impact islands (Arichika and Bischofs) and three control islands (Alder, Hotspring, Ramsay) and in general, 2 years of sampling... 
+In phase 1, rat eradication occurred post-breeding season, 2011. In general, there were two impact islands (Arichika and Bischofs) and three control islands (Alder, Hotspring, Ramsay); sampling occured two years before (2010, 2011) and after (2012, 2013) impact at most, but not all sites. In phase 2, eradication of rats took place post-breeding season, 2013. In general, there were two impact sites (Faraday, Murchison) and 4 control sites (Alder, Hotspring, House, Ramsay); sampling occured two years before (2011, 2012) and after (2013, 2014) impact at most, but not all sites. Sites were located to target habitat of paticular apecies; therefore selection of sites in each model varied for each species. See temporal coverage plots for details on which sites and islands were used for each species and phase.
 
-In phase 2, eradication of rats took place post-breeding season, 2013. There were two impact sites (Faraday, Murchison) and 4 control sites (Alder, Hotspring/House, Ramsay) and in general, 3 years of sampling before impact (2011, 2012, 2013) and 2 years of sampling after impact (2014, 2015). In total, there were 53 replciate:year combinations (after filtering out replicates that sampled outside of our time-window; see below). Replicates were located at fixed locataions across years. The sampling design was unbalanced; the number of replicates at each site ranged from 1 to 8, and replicates did not consistently sample in all years (2011-2015). 
+Variation occurred in sampling duration (i.e. start and end time) of ARUs: across years (e.g. 2011, 2013), within-years (e.g. April 26 - June 06) and within each night (e.g. 12:00am - 3:40am), which made it necessary to constrain our analysis to a common time window for each year. This window varied for each species, depending on observed daily and seasonal vocalization probabilities. We determined the maximum mean vocalization probability within a sliding window of 14 days (within-season) and 1 hour (i.e. 3 recordings; within-night) for each species (see Figure 9 and Figure 12 of vocalization probability report). With the maximum as a centre point, we filtered all recordings by a 14 days within-season window and 3 hour within-night window for each species. We assumed these windows to be representative of the breeding population for that season, i.e. a period of minimal permanent egress/ingress of breeders. Further, since ARUs were often operating in April-June, these windows were generally well represented by monitoring locations in each year.
 
-Variation occurred in sampling duration (i.e. start and end time) of ARUs: across years (e.g. 2011, 2013), within-years (e.g. April 26 - June 06) and within each night (e.g. 12:00am - 3:40am), which made it necessary to constrain our analysis to a common time window, which was justified by observed vocalization probability. We selected the maximum mean vocalization probability within a sliding window of 14 days (within-season) and 1 hour (i.e. 3 recordings; within-night) for each species (Figure ...). Cassin's Auklets had one large peak in vocalization in early April and another (somewhat smaller) in early-mid May; we used a sampling window in early May because many ARUs were not yet operational in early April. We assumed these windows to be representative of the breeding population for that season, i.e. a period of minimal permanent egress/ingress of breeders. Further, since ARUs were often operating in April-June, these windows were generally well represented by monitoring locations in each year.
+#### Statistical model
+All statistical modeling analyses were performed using the lsmeans and lme4 packages, within R. Prior to analysis, each response was logit-transformed (empirical logit transformation) to account for proportions being bounded at 0 and 1. Tables present results as logit-transformed values unless otherwise stated. For each species:phase:response combination, we fit a linear mixed-effects model. Due to the unbalanced experimental design (e.g. not all monitoring locations consistently monitored in every year), the response was calculated at each monitoring location rather than each island group; this allowed us to account for site-specific factors as random effects. For all models, fixed effects included time period ('Before' and 'After'), treatment ('Control', 'Impact'), and time period:treatment interaction; random effects included year, island and site (nested within island). 
 
-##### Statistical model
-Prior to analysis, each response was logit-transformed (empirical logit transformation) to account for proportions being bounded at 0 and 1. Tables present results as logit-transformed values unless otherwise stated. For each species:phase:response combination, we fit a linear mixed-effects model within R, using the lmer() function within the lme4 package. Due to the unbalanced experimental design (e.g. not all monitoring locations consistently monitored in every year), the response was calculated at each monitoring location rather than each island group; this allowed for testing random effects of site, nested within island. For all models, fixed effects included period (Before/After), siteclass (Control/Impact), and period:siteclass interaction; random effects included year, island and site (nested within island). 
-
-We used ANOVA (type 3 with Kenward-Roger approximation for degrees of freedom) to determine statistical significance of fixed effects. For all coefficients, a p-value < 0.05 indicated statistical significance. The model interaction term (Period : Site Class), i.e. the 'BACI effect', indicates a difference in before-after response for control and impact groups. Statistical signficance (p-value < 0.05)of fixed effects was determined using type 3 ANOVA with  Kenward-Roger approximation for degrees of freedom. The estimate of the model interaction term ('contrast') indicates the magnitude of the BACI effect, and is calculated as the difference of the differences in marginal means (uCA - uCB - uIA + uIB). We also calculated 95% confidence interval and standard error for the BACI contrast. In the results, we present both the model output estimate (logit-transformed) and the exp(estimate). The exp(estimate) is interpreted as the increase in odds of presence in the control group relative to the impact group. All statistical modeling analyses were performed using the lsmeans and lme4 R packages.
+We used ANOVA (type 3 with Kenward-Roger approximation for degrees of freedom) to determine statistical significance of fixed effects. For all coefficients, a p-value < 0.05 indicated statistical significance. The model interaction term (time period:treatment), i.e. the 'BACI effect' or 'contrast', indicates a difference in before-after mean response for control and impact groups and can be calculated as the difference of the differences in marginal means (uCA - uCB - uIA + uIB). We also calculated 95% confidence interval and standard error for the contrast. In the results, we present both the model output Estimate (logit-transformed) and the exp(Estimate). The exp(Estimate) is interpreted as the multiplicative increase in odds of presence in the control group relative to the impact group. For example, an exp(Estimate) of 1.5 would indicate that the odds of presence increased by 1.5x more in the control group relative to the impact group. The ratio of the exp(Estimate) (1/1.5 = 0.67) indicates that the odds of presence increased by 0.67x more in the impact group relative to the control group. 
 
 Key assumptions of the model:    
 
@@ -48,15 +46,19 @@ Key assumptions of the model:
 
     + This assumption may not be valid as recovery of seabird breeding population may occur over a longer time period than is accounted for in this study.   
     
-* Variance is homogeneous, data are normally distributed.   
+* Variance is homogeneous.  
 
-    + We used several diagnostic plots (residuals vs. fitted values, qqplot for normality) to test validity of the statistical model and associated p-values.    
+    + We plotted resisiduals vs. fitted values to test this.  Logit-transformation improved homogeneity of variance.  
     
 * Observations are independent within each site-year combination and across years.   
 
     + Sites were spaced sufficeintly far apart in space to warrant assumption of independence.     
+    
+#### Summary of results
+There was one statistically significant result: Ancient Murrelet, phase 2, p(presence) (Table 5 and Table 6). The exp(Estimate) (i.e. BACI effect) was 0.14 (p-value = 0.045). This indicates that the odds of presence increased by 7.14x (1 / 0.14) more in the impact group relative to the control group (or 0.14x more in the control group relative to the impact group). This provides some evidence for the recovery of Ancient Murrelet two years following rat-eradication; or more specifically, the number of recordings with detected presence of Ancient Murrelet within our temporal sampling window increased in the impact group relative to the control group. It should be noted that in this period, the control sites had almost 100% detection rate before and after eradication (mean proportion = 0.998 before and 0.995 after), whereas the detection rate in the impact group increased slightly from 0 (mean proportion = 0.004 before and 0.009 after). 
 
-## Ancient Murrelet
+# Ancient Murrelet
+### Temporal coverage
 `r figs("anmu.temp.ph1")`
 
 ```{r anmu.temp.ph1)}
@@ -82,7 +84,7 @@ island_props(data = filter(baci.island, species == sp[1] & phase1 == 1 & island 
 island_props(data = filter(baci.island, species == sp[1] & phase2 == 1 & island != 'Hotspring'), vline = 2013.5)
 ```
 
-### Statistical model results
+### Model results
 #### Phase 1, p(presence)
   
 `r tbls("anmu.ph1.1.cont")`
@@ -97,7 +99,6 @@ kable(summary_cont(anmu.ph1.1, 'PeriodPh1'))
 knitr::kable(summary_marg(anmu.ph1.1, 'PeriodPh1'))
 ```
 
- 
 #### Phase 1, p(presence>1)
 
 `r tbls("anmu.ph1.2.cont")`
@@ -109,7 +110,6 @@ kable(summary_cont(anmu.ph1.2, 'PeriodPh1'))
 ```{r anmu.ph1.2.marg, results = "asis"} 
 knitr::kable(summary_marg(anmu.ph1.2, 'PeriodPh1'))
 ```
-
 
 #### Phase 2, p(presence)
 
@@ -123,7 +123,6 @@ kable(summary_cont(anmu.ph2.1, 'PeriodPh2'))
 knitr::kable(summary_marg(anmu.ph2.1, 'PeriodPh2'))
 ```
 
-
 #### Phase 2, p(presence>1)
 
 `r tbls("anmu.ph2.2.cont")`
@@ -136,7 +135,9 @@ kable(summary_cont(anmu.ph2.2, 'PeriodPh2'))
 knitr::kable(summary_marg(anmu.ph2.2, 'PeriodPh2'))
 ```
 
-## Cassin's Auklet
+# Cassin's Auklet
+### Temporal coverage
+
 `r figs("caau.temp.ph1")`
 
 ```{r caau.temp.ph1)}
@@ -162,7 +163,7 @@ island_props(data = filter(baci.island, species == sp[2] & phase1 == 1), vline =
 island_props(data = filter(baci.island, species == sp[2] & phase2 == 1), vline = 2013.5)
 ```
 
-### Statistical model results
+### Model results
 #### Phase 1, p(presence)
  
 `r tbls("caau.ph1.1.cont")`
@@ -187,7 +188,6 @@ kable(summary_cont(caau.ph1.2, 'PeriodPh1'))
 knitr::kable(summary_marg(caau.ph1.2, 'PeriodPh1'))
 ```
 
-
 #### Phase 2, p(presence)
 
 `r tbls("caau.ph2.1.cont")`
@@ -199,7 +199,6 @@ kable(summary_cont(caau.ph2.1, 'PeriodPh2'))
 ```{r caau.ph2.1.marg, results = "asis"} 
 knitr::kable(summary_marg(caau.ph2.1, 'PeriodPh2'))
 ```
-
 
 #### Phase 2, p(presence>1)
 
@@ -213,7 +212,9 @@ kable(summary_cont(caau.ph2.2, 'PeriodPh2'))
 knitr::kable(summary_marg(caau.ph2.2, 'PeriodPh2'))
 ```
 
-## Fork-Tailed Storm Petrel
+# Fork-Tailed Storm Petrel
+### Temporal coverage
+
 `r figs("ftsp.temp.ph1")`
 
 ```{r ftsp.temp.ph1)}
@@ -239,7 +240,7 @@ island_props(data = filter(baci.island, species == sp[3] & phase1 == 1), vline =
 island_props(data = filter(baci.island, species == sp[3] & phase2 == 1), vline = 2013.5)
 ```
 
-### Statistical model results
+### Model results
 #### Phase 1, p(presence)
  
 `r tbls("ftsp.ph1.1.cont")`
@@ -263,7 +264,6 @@ kable(summary_cont(ftsp.ph1.2, 'PeriodPh1'))
 ```{r ftsp.ph1.2.marg, results = "asis"} 
 knitr::kable(summary_marg(ftsp.ph1.2, 'PeriodPh1'))
 ```
-
 
 #### Phase 2, p(presence)
 
@@ -289,9 +289,8 @@ kable(summary_cont(ftsp.ph2.2, 'PeriodPh2'))
 knitr::kable(summary_marg(ftsp.ph2.2, 'PeriodPh2'))
 ```
 
-
-# Appendix A - Model summary coefficients
-#### Note that estimate for interaction term and p-value are identical to BACI contrast table.
+## Appendix A - Summary of model coefficients
+##### Note that estimate for interaction term and p-value are identical to BACI contrast table.
 `r tbls("anmu.ph1.1.coef")`
 
 ```{r anmu.ph1.1.coef, results = "asis"}

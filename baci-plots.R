@@ -1,4 +1,4 @@
-source('header.R')
+
 
 # coverage 
 tempcov_baci_all = function(data, x, y, color, date.start, date.end) {
@@ -26,9 +26,10 @@ tempcov_baci_win = function(data, x, y, color, date.start, date.end) {
 
 # props x island
 island_props = function(data, vline) {
-  ggplot(data, aes(x = year, y = mean.prop,  color = exp, shape = island)) +
-    facet_wrap(~propType) + geom_point(size = 2.4, position = position_dodge(width = 0.1)) + geom_line() +
-    theme_bw() + geom_vline(xintercept = vline) + labs(x = 'Year', y = 'Mean logit(proportion)', color = 'Treatment', shape = 'Island') + 
+  ggplot(data, aes(x = year, y = mean,  color = exp)) +
+    facet_wrap(~propType) + geom_point(size = 2, position = position_dodge(width = 0.1)) + geom_line(aes(linetype = island), size = 1) +
+    geom_errorbar(aes(year, ymin = lower, ymax = upper), width = 0.2) +
+    theme_bw() + geom_vline(xintercept = vline) + labs(x = 'Year', y = 'Mean logit(proportion)', color = 'Treatment', linetype = 'Island') + 
     theme_big
 }
 

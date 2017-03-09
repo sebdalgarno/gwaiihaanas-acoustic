@@ -23,6 +23,9 @@ library(lazyeval)
 library(binomTools)
 library(captioner)
 
+rm(list = ls())
+graphics.off()
+
 ## function to convert projection
 convert_proj <- function(data, data.x = "Long", data.y = "Lat", data.CRS = "+init=epsg:4326", new.CRS = "+init=epsg:3005") {
   
