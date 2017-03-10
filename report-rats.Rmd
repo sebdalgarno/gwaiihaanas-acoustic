@@ -1,0 +1,129 @@
+---
+title: "Short-term Impacts of Island Restoration on Seabirds in Gwaii Haanas"
+knit: (function(inputFile, encoding) { 
+      out_dir <- 'reports';
+      ext <- '.html';
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_file=file.path(dirname(inputFile), out_dir,  paste('GH-acoustic-Report-Rats-', lubridate::date(Sys.time()), ext, sep = ''))) })
+output:
+  html_document
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE, echo=F, warning=F,message=F,results="hide", prompt=F, error=F, fig.path = 'reports/files/')
+```
+
+
+```{r}
+source('rats-runall.R')
+```
+
+Task 2d) `r task2d`
+
+#### Experimental Design
+We examined effects of rat status and year on two vocalization metrics: (1) the proportion of recordings with detection of at least one individual across a common within-season time-period (p(presence)); (2) the proportion of recordings with detection of more than one individual (i.e. overlapping calls) across a common within-season time-period (p(presence > 1). Metrics were calculated for each site:year combination unaffected by rat eradication (i.e. excluded all site:years 'post-impact'). This was done because rat-free islands post-eradication may be 'different' than islands that are naturally rat-free. 
+
+#### Statistical model
+We modeled each response (p(presence) and p(presence > 1)) within a linear mixed-effects model, using the lmer() function within the lmerTest R package. Model fixed effects included rat status ('present' or 'absent') and year (2010-2015); random effects included year (factor) and site, nested within island (lmerTest::lmer(prop ~ rats + year + (1|yearf) + (1|island/site)), where yearf is factor(year)). Additional models were fit for each species:response combination with a rat status:year interaction term to test whether the trend was the same across rat status. Relative variance of random effects and plots of residuals vs fitted values were inspected to assess model validity. 
+
+#### Summary of model results
+For all models, there was evidence to support the negative effect of rat presence on vocalization metrics (p-value < 0.022). No evidence was found in any models for a linear effect of year (p-value > 0.5). Further, there was no evidence to support models including a rat status:year interaction term (for all models, all p-value for all terms > 0.08); results for interaction models are not shown below.
+
+# Ancient Murrelet
+### Temporal coverage
+`r figs("anmu.temp.rats")`
+
+```{r anmu.temp.rats)}
+tempcov_rats_win(data = filter(seaprep, Impact == 0 & species == sp[1]),
+                 x = 'night.ny', y = 'site', color = 'rats')
+```
+  
+### Mean logit(proportion) by island and year
+`r figs("anmu.mean.rats")`
+
+```{r, anmu.mean.rats)}
+rat_props(filter(rats.island, species == sp[1]))
+```
+
+### Model results
+#### p(presence)
+  
+`r tbls("anmu.1.rats")`
+
+```{r anmu.1.rats, results = "asis"} 
+kable(summary_rats(anmu.1))
+```
+
+#### p(presence>1)
+
+`r tbls("anmu.2.rats")`
+```{r anmu.2.rats, results = "asis"} 
+kable(summary_rats(anmu.2))
+```
+
+# Cassin's Auklet
+### Temporal coverage
+`r figs("caau.temp.rats")`
+
+```{r caau.temp.rats)}
+tempcov_rats_win(data = filter(seaprep, Impact == 0 & species == sp[1]),
+                 x = 'night.ny', y = 'site', color = 'rats')
+```
+  
+### Mean logit(proportion) by island and year
+`r figs("caau.mean.rats")`
+
+```{r, caau.mean.rats)}
+rat_props(filter(rats.island, species == sp[1]))
+```
+
+### Model results
+#### p(presence)
+  
+`r tbls("caau.1.rats")`
+
+```{r caau.1.rats, results = "asis"} 
+kable(summary_rats(caau.1))
+```
+
+#### p(presence>1)
+
+`r tbls("caau.2.rats")`
+```{r caau.2.rats, results = "asis"} 
+kable(summary_rats(caau.2))
+```
+
+# Fork-Tailed Storm Petrel
+### Temporal coverage
+`r figs("ftsp.temp.rats")`
+
+```{r ftsp.temp.rats)}
+tempcov_rats_win(data = filter(seaprep, Impact == 0 & species == sp[1]),
+                 x = 'night.ny', y = 'site', color = 'rats')
+```
+  
+### Mean logit(proportion) by island and year
+`r figs("ftsp.mean.rats")`
+
+```{r, ftsp.mean.rats)}
+rat_props(filter(rats.island, species == sp[1]))
+```
+
+### Model results
+#### p(presence)
+  
+`r tbls("ftsp.1.rats")`
+
+```{r ftsp.1.rats, results = "asis"} 
+kable(summary_rats(ftsp.1))
+```
+
+#### p(presence>1)
+
+`r tbls("ftsp.2.rats")`
+```{r ftsp.2.rats, results = "asis"} 
+kable(summary_rats(ftsp.2))
+```
+
