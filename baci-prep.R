@@ -8,10 +8,13 @@ lapply(list.files(path = 'data', pattern = "*.Rda", full.names = TRUE), load, .G
   n.window <- ddply(filter(voc.night.m, response == 'p(presence)', !is.na(max.3)), .(species), summarise, 
                     time.start =  first(hrmin) - minutes(90), time.end =  first(hrmin) + minutes(90))
   
+  save(n.window, file = 'data/nwindow.Rda')
+  
   # seasonal sampling window for each species
   y.window <- ddply(filter(voc.allyear.m, response == 'p(presence)', !is.na(max.14)), .(species), summarise, 
                     date.start =  first(ynight) - days(7), date.end =  first(ynight) + days(7))
   
+  save(y.window, file = 'data/ywindow.Rda')
   
   # set year to arbitrary (2010) to enable filter by within-season data and time
   seaprep$night.ny <- seaprep$night
