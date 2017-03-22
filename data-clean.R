@@ -97,6 +97,8 @@ clean <- function() {
     
     mutate(ynight = ymd_hms(paste(as.character(ynight), '00:00:00', sep = ' '), tz = tz_data))
   
+  sea %<>% mutate(island = replace(island, siteID == "NBR25_HOTS", "Hotspring Islet"))
+  
   save(sea, file = 'data/sea-clean.Rda')
   # create a spatial points data.frame
   sp.sea <- convert_proj(sea, 'long', 'lat')
